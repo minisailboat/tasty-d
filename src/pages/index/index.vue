@@ -1,4 +1,10 @@
 <script setup lang="ts">
+import TopNav from "@/components/TopNav.vue";
+import { useCounterStore } from "@/stores/counter";
+
+const counterStore = useCounterStore();
+console.log(counterStore);
+
 const change = (e: any) => {
 	console.log("弹窗打开状态：", e);
 };
@@ -6,6 +12,7 @@ const change = (e: any) => {
 
 <template>
 	<view class="content" style="height: 1000px">
+		<TopNav />
 		<uv-drop-down
 			ref="dropDown"
 			sign="dropDown_1"
@@ -26,6 +33,10 @@ const change = (e: any) => {
 				asd
 			</view>
 		</uv-drop-down-popup>
+		<!-- 直接从 store 中访问 state -->
+		<text>Current Count: {{ counterStore.count }}</text>
+		<uv-button @click="() => counterStore.count++">add</uv-button>
+		<uv-button @click="() => counterStore.increment()">Increment</uv-button>
 	</view>
 </template>
 
