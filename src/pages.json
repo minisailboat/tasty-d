@@ -7,7 +7,7 @@
 	},
 	"pages": [
 		{
-			"path": "pages/home/index",
+			"path": "pages/Layout",
 			"style": {
 				"navigationBarTitleText": "uni-app"
 			}

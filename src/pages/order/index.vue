@@ -6,7 +6,7 @@ onLoad(() => {});
 
 <template>
 	<view class="home h-full flex flex-col justify-center items-center">
-		首页
+		订单
 	</view>
 </template>
 
