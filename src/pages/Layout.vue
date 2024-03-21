@@ -30,7 +30,7 @@ const activeTab = ref(0);
 </script>
 
 <template>
-	<view class="home h-screen flex flex-col">
+	<view class="h-screen flex flex-col bg-[#F7F7F7]">
 		<NavBar
 			v-show="activeTab !== 2"
 			:title="activeTab === 1 ? tabbar[activeTab].title : ''"

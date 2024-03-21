@@ -30,7 +30,10 @@ const onTabClick = (index: number) => {
 </script>
 
 <template>
-	<view v-if="!hide" class="tabbar h-[120rpx] flex justify-evenly items-center">
+	<view
+		v-if="!hide"
+		class="tabbar h-[120rpx] flex justify-evenly items-center rounded-t-3xl overflow-hidden bg-white"
+	>
 		<view
 			class="tabbar-item w-full h-full flex justify-center items-center"
 			v-for="(tab, tabIdx) in props.tabbar"
