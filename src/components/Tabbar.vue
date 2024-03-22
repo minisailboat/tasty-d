@@ -1,29 +1,24 @@
 <script setup lang="ts">
-import type { TabbarItem } from "@/types";
-import { computed } from "vue";
+import type { TabbarItem } from '@/types'
+import { computed } from 'vue'
 
 interface TabbarProps {
-	tabbar: TabbarItem[];
-	active: number;
+	tabbar: TabbarItem[]
+	active: TabbarItem
 }
 
-const props = withDefaults(defineProps<TabbarProps>(), {
-	tabbar: () => [],
-	active: 0,
-});
-const emit = defineEmits(["update:active"]);
+const props = defineProps<TabbarProps>()
+const emit = defineEmits(['update:active'])
 
 const hide = computed(() => {
-	return props.tabbar.length <= 0;
-});
-const tabbarItemActive = (index: number) => {
-	console.log(props.active, index, props.active === index);
-
-	return props.active === index;
-};
-const onTabClick = (index: number) => {
-	emit("update:active", index);
-};
+	return props.tabbar.length <= 0
+})
+const isActive = (current: TabbarItem) => {
+	return props.active.key === current.key
+}
+const onTabClick = (current: TabbarItem) => {
+	emit('update:active', current)
+}
 </script>
 
 <template>
@@ -33,13 +28,13 @@ const onTabClick = (index: number) => {
 	>
 		<view
 			class="tabbar-item w-full h-full flex justify-center items-center"
-			v-for="(tab, tabIdx) in props.tabbar"
-			:class="tabbarItemActive(tabIdx) && 'font-bold'"
-			@click="onTabClick(tabIdx)"
+			v-for="(tab, index) in props.tabbar"
+			:key="`${tab.key}_${index}`"
+			@click="onTabClick(tab)"
 		>
 			<uv-icon
-				:class="tabbarItemActive(tabIdx) ? 'active' : ''"
-				:name="tabbarItemActive(tabIdx) ? tab.selectedIcon : tab.icon"
+				:class="isActive(tab) ? 'active' : ''"
+				:name="isActive(tab) ? tab.selectedIcon : tab.icon"
 				:size="28"
 			/>
 		</view>
