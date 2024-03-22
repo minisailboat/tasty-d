@@ -58,7 +58,7 @@ const activeTab = ref<TabbarItem>(tabbar.value[0])
 				<uv-icon v-if="activeTab.key === TabbarEnum.HOME" name="search" :size="28" />
 			</template>
 		</NavBar>
-		<view class="content flex-1 bg-[#F7F7F7]">
+		<view class="content flex-1 bg-[#F7F7F7] overflow-y-auto">
 			<Home v-show="activeTab.key === TabbarEnum.HOME" />
 			<Order v-show="activeTab.key === TabbarEnum.ORDER" />
 			<My v-show="activeTab.key === TabbarEnum.MY" />
