@@ -7,6 +7,11 @@ import uvtw from "@uni-helper/vite-plugin-uni-tailwind";
 export default defineConfig({
 	css: {
 		postcss: postcssConfig,
+		preprocessorOptions: {
+			scss: {
+				additionalData: `@import "@/styles/index.scss";`,
+			},
+		},
 	},
 	plugins: [uni(), uvtw()],
 	build: {

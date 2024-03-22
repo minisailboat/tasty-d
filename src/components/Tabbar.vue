@@ -1,11 +1,6 @@
 <script setup lang="ts">
+import type { TabbarItem } from "@/types";
 import { computed } from "vue";
-
-interface TabbarItem {
-	title: string;
-	icon: string;
-	selectedIcon: string;
-}
 
 interface TabbarProps {
 	tabbar: TabbarItem[];
@@ -22,6 +17,8 @@ const hide = computed(() => {
 	return props.tabbar.length <= 0;
 });
 const tabbarItemActive = (index: number) => {
+	console.log(props.active, index, props.active === index);
+
 	return props.active === index;
 };
 const onTabClick = (index: number) => {
@@ -41,6 +38,7 @@ const onTabClick = (index: number) => {
 			@click="onTabClick(tabIdx)"
 		>
 			<uv-icon
+				:class="tabbarItemActive(tabIdx) ? 'active' : ''"
 				:name="tabbarItemActive(tabIdx) ? tab.selectedIcon : tab.icon"
 				:size="28"
 			/>
@@ -48,4 +46,14 @@ const onTabClick = (index: number) => {
 	</view>
 </template>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.tabbar-item {
+	.active {
+		::v-deep(.uvicon) {
+			span {
+				color: $color-primary;
+			}
+		}
+	}
+}
+</style>
