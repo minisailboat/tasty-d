@@ -36,19 +36,10 @@ const onTabClick = (current: TabbarItem) => {
 				:class="isActive(tab) ? 'active' : ''"
 				:name="isActive(tab) ? tab.selectedIcon : tab.icon"
 				:size="28"
+				:color="isActive(tab) ? '#65c6b0' : ''"
 			/>
 		</view>
 	</view>
 </template>
 
-<style scoped lang="scss">
-.tabbar-item {
-	.active {
-		::v-deep(.uvicon) {
-			span {
-				color: $color-primary;
-			}
-		}
-	}
-}
-</style>
+<style scoped lang="scss"></style>

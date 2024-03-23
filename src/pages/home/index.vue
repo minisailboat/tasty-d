@@ -24,24 +24,26 @@ const list = ref([
 			bgColor="#F7F7F7"
 			height="170"
 		/>
+		<!-- 优惠活动 -->
 		<view class="mb-4 flex flex-col">
 			<!-- 优惠标题 -->
 			<view class="mx-4 mb-2">
-				<text>商品推荐</text>
+				<uv-text bold size="16" :lines="1" :text="``" />
 			</view>
-			<!-- 店铺列表 -->
-			<view class="px-4">
-				<view class="mb-2 relative overflow-hidden" v-for="item in 2" :key="item">
-					<view class="w-full h-[180rpx] rounded-xl bg-[#fad281] flex flex-col">
-						<text class="text-20 text-black">优惠券({{ item }})</text>
-						<text class="text-12 text-gray">100</text>
+			<!-- 优惠列表 -->
+			<view class="pl-4 flex flex-nowrap overflow-x-scroll">
+				<view class="" v-for="item in 3" :key="item">
+					<view class="w-[250rpx] h-[150rpx] mr-4 p-2 box-border rounded-xl bg-white flex flex-col">
+						<uv-text bold size="14" :lines="1" :text="`香辣鸡腿堡(${item})`" />
+						<view class="flex text-sm text-gray-400">
+							<uv-icon class="mr-1" name="red-packet" :size="16" color="#9ca3af" />
+							<uv-text size="14" :lines="1" :text="`100`" />
+						</view>
+						<view class="flex text-sm text-gray-400">
+							<uv-icon class="mr-1" name="star-fill" :size="16" color="#9ca3af" />
+							<uv-text size="14" :lines="1" :text="`100`" />
+						</view>
 					</view>
-					<uv-image
-						class="absolute bottom-0 right-0 z-[999] translate-x-2 translate-y-2"
-						width="180rpx"
-						height="180rpx"
-						src="https://cdn.uviewui.com/uview/album/1.jpg"
-					/>
 				</view>
 			</view>
 		</view>
@@ -49,30 +51,56 @@ const list = ref([
 		<view class="mb-4 flex flex-col">
 			<!-- 优惠标题 -->
 			<view class="mx-4 mb-2">
-				<text>优惠活动</text>
+				<uv-text bold size="16" :lines="1" :text="``" />
 			</view>
 			<!-- 优惠列表 -->
 			<view class="pl-4 flex flex-nowrap overflow-x-scroll">
-				<view class="relative" v-for="item in 20" :key="item">
-					<view class="w-[400rpx] h-[250rpx] p-2 rounded-xl bg-[#fad281] mr-4 flex flex-col">
-						<text class="text-20 text-black">优惠券({{ item }})</text>
-						<text class="text-12 text-gray">100</text>
+				<view class="relative" v-for="item in 3" :key="item">
+					<view class="w-[350rpx] h-[200rpx] mr-4 p-3 box-border rounded-xl bg-white flex flex-col">
+						<uv-text bold size="16" :lines="1" :text="`香辣鸡腿堡(${item})`" />
+						<view class="flex text-sm text-gray-400">
+							<uv-icon class="mr-1" name="red-packet" :size="16" color="#9ca3af" />
+							<uv-text size="14" :lines="1" :text="`100`" />
+						</view>
+						<view class="flex text-sm text-gray-400">
+							<uv-icon class="mr-1" name="star-fill" :size="16" color="#9ca3af" />
+							<uv-text size="14" :lines="1" :text="`100`" />
+						</view>
 					</view>
 				</view>
 			</view>
 		</view>
-		<!-- 附近美食 -->
+		<!-- 推荐 -->
 		<view class="mb-4 flex flex-col">
 			<!-- 优惠标题 -->
-			<view class="mx-4 mb-2">
-				<text>附近美食</text>
+			<view class="mx-4 mb-2 flex">
+				<uv-text bold size="16" :lines="1" :text="`推荐`" />
+				<uv-button shape="circle" :plain="true" :hairline="true" size="small">更多</uv-button>
 			</view>
 			<!-- 店铺列表 -->
 			<view class="px-4">
-				<view class="mb-2 relative" v-for="item in 10" :key="item">
-					<view class="w-full h-[180rpx] rounded-xl bg-[#fad281] flex flex-col">
-						<text class="text-20 text-black">优惠券({{ item }})</text>
-						<text class="text-12 text-gray">100</text>
+				<view class="w-full h-[190rpx] mb-2 flex items-center" v-for="item in 3" :key="item">
+					<uv-image
+						class="mr-2"
+						width="180rpx"
+						height="180rpx"
+						radius="12"
+						src="https://cdn.uviewui.com/uview/album/1.jpg"
+					/>
+					<view class="w-full h-full p-2 rounded-xl bg-white box-border flex flex-col">
+						<uv-text bold size="16" :lines="1" :text="`香辣鸡腿堡(${item})`" />
+						<view class="flex text-sm text-gray-400">
+							<uv-icon class="mr-1" name="map" :size="16" color="#9ca3af" />
+							<uv-text size="14" :lines="1" :text="`100`" />
+						</view>
+						<view class="flex text-sm text-gray-400">
+							<uv-icon class="mr-1" name="red-packet" :size="16" color="#9ca3af" />
+							<uv-text size="14" :lines="1" :text="`100`" />
+						</view>
+						<view class="flex text-sm text-gray-400">
+							<uv-icon class="mr-1" name="star-fill" :size="16" color="#9ca3af" />
+							<uv-text size="14" :lines="1" :text="`100`" />
+						</view>
 					</view>
 				</view>
 			</view>
