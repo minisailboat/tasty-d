@@ -1,8 +1,5 @@
 <script setup lang="ts">
-import { onLoad } from '@dcloudio/uni-app'
 import { ref } from 'vue'
-
-onLoad(() => {})
 
 const current = ref(0)
 const list = [
@@ -39,7 +36,13 @@ const toOrderDetail = (order: any) => {
 
 <template>
 	<view class="order h-full flex flex-col">
-		<uv-tabs :current="current" :list="list" :scrollable="false" @change="onTabChange"></uv-tabs>
+		<uv-tabs
+			lineColor="#65c6b0"
+			:current="current"
+			:list="list"
+			:scrollable="false"
+			@change="onTabChange"
+		></uv-tabs>
 		<!-- 待支付 -->
 		<view v-show="show('pending')" class="mb-4 flex flex-col">
 			<!-- 订单类型 -->

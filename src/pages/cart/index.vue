@@ -1,9 +1,7 @@
 <script setup lang="ts">
-import { onLoad } from '@dcloudio/uni-app'
 import { watchEffect } from 'vue'
 import { ref } from 'vue'
 
-onLoad(() => {})
 const cart = ref(Array.from({ length: 20 }, (_, index) => ({ name: `name_${index}`, value: index })))
 const plus = () => {
 	console.log('添加')

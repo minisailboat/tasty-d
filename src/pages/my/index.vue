@@ -1,8 +1,4 @@
-<script setup lang="ts">
-import { onLoad } from '@dcloudio/uni-app'
-
-onLoad(() => {})
-</script>
+<script setup lang="ts"></script>
 
 <template>
 	<view class="my h-full flex flex-col relative">

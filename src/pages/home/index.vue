@@ -1,8 +1,5 @@
 <script setup lang="ts">
-import { onLoad } from '@dcloudio/uni-app'
 import { ref } from 'vue'
-
-onLoad(() => {})
 
 const list = ref([
 	'https://cdn.uviewui.com/uview/swiper/swiper3.png',

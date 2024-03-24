@@ -2,22 +2,31 @@
 const props = defineProps({
 	title: {
 		type: String,
-		default: "",
+		default: ''
 	},
 	class: {
 		type: String,
-		default: "",
+		default: ''
 	},
-});
+	back: {
+		type: Boolean,
+		default: false
+	}
+})
+
+const back = () => {
+	uni.navigateBack()
+}
 </script>
 
 <template>
-	<view
-		class="navbar px-4 h-[120rpx] box-border flex justify-between items-center"
-		:class="props.class"
-	>
+	<view class="navbar px-4 h-[120rpx] box-border flex justify-between items-center" :class="props.class">
 		<view class="flex-1 h-full flex justify-start items-center">
-			<slot name="left"></slot>
+			<slot name="left">
+				<view v-if="props.back" class="pr-2 flex items-center">
+					<uv-icon name="arrow-left" :size="28" @click="() => back()" />
+				</view>
+			</slot>
 		</view>
 		<view class="h-full flex justify-start items-center">
 			<slot name="default">{{ props.title }}</slot>
