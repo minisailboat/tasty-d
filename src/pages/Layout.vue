@@ -39,6 +39,11 @@ const tabbar = ref<TabbarItem[]>([
 	}
 ])
 const activeTab = ref<TabbarItem>(tabbar.value[0])
+const toFilter = () => {
+	uni.navigateTo({
+		url: '/pages/filter/index'
+	})
+}
 </script>
 
 <template>
@@ -56,7 +61,7 @@ const activeTab = ref<TabbarItem>(tabbar.value[0])
 				</view>
 			</template>
 			<template #right>
-				<uv-icon v-if="activeTab.key === TabbarEnum.HOME" name="search" :size="28" />
+				<uv-icon v-if="activeTab.key === TabbarEnum.HOME" name="search" :size="28" @click="toFilter" />
 			</template>
 		</NavBar>
 		<view class="content flex-1 overflow-y-auto">

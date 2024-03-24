@@ -30,6 +30,11 @@ onLoad(() => {})
 				<uv-icon class="p-2" name="arrow-right" size="20" color="#c8c8d3" />
 			</view>
 			<view class="w-3/4 h-10 mb-4 rounded bg-[#04041508] flex justify-center items-center">
+				<uv-icon class="mr-4 p-2" name="shopping-cart-fill" size="24" color="#c8c8d3" />
+				<uv-text size="16" :lines="1" :text="`我的订单`" />
+				<uv-icon class="p-2" name="arrow-right" size="20" color="#c8c8d3" />
+			</view>
+			<view class="w-3/4 h-10 mb-4 rounded bg-[#04041508] flex justify-center items-center">
 				<uv-icon class="mr-4 p-2" name="coupon-fill" size="24" color="#c8c8d3" />
 				<uv-text size="16" :lines="1" :text="`我的优惠卷`" />
 				<uv-icon class="p-2" name="arrow-right" size="20" color="#c8c8d3" />

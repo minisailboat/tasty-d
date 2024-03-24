@@ -29,6 +29,12 @@ const onTabChange = ({ index }: { index: number }) => {
 const show = (key: string) => {
 	return list[current.value].key === key || list[current.value].key === 'all'
 }
+const toOrderDetail = (order: any) => {
+	console.log(order)
+	uni.navigateTo({
+		url: '/pages/order/Detail'
+	})
+}
 </script>
 
 <template>
@@ -42,7 +48,12 @@ const show = (key: string) => {
 			</view>
 			<!-- 订单列表 -->
 			<view class="px-4">
-				<view class="w-full h-[190rpx] mb-2 flex items-center" v-for="item in 2" :key="item">
+				<view
+					class="w-full h-[190rpx] mb-2 flex items-center"
+					v-for="item in 2"
+					:key="item"
+					@click="() => toOrderDetail(item)"
+				>
 					<uv-image
 						class="mr-2"
 						width="180rpx"
@@ -82,7 +93,12 @@ const show = (key: string) => {
 			</view>
 			<!-- 订单列表 -->
 			<view class="px-4">
-				<view class="w-full h-[190rpx] mb-2 flex items-center" v-for="item in 2" :key="item">
+				<view
+					class="w-full h-[190rpx] mb-2 flex items-center"
+					v-for="item in 2"
+					:key="item"
+					@click="() => toOrderDetail(item)"
+				>
 					<uv-image
 						class="mr-2"
 						width="180rpx"
@@ -122,7 +138,12 @@ const show = (key: string) => {
 			</view>
 			<!-- 订单列表 -->
 			<view class="px-4">
-				<view class="w-full h-[190rpx] mb-2 flex items-center" v-for="item in 6" :key="item">
+				<view
+					class="w-full h-[190rpx] mb-2 flex items-center"
+					v-for="item in 6"
+					:key="item"
+					@click="() => toOrderDetail(item)"
+				>
 					<uv-image
 						class="mr-2"
 						width="180rpx"

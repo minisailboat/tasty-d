@@ -5,6 +5,19 @@ import { ref } from 'vue'
 
 onLoad(() => {})
 const cart = ref(Array.from({ length: 20 }, (_, index) => ({ name: `name_${index}`, value: index })))
+const plus = () => {
+	console.log('添加')
+}
+const minus = () => {
+	console.log('减少')
+}
+const toFoodDetail = (food: any) => {
+	console.log(food)
+	uni.navigateTo({
+		url: '/pages/menu/Detail'
+	})
+}
+// 选择
 const selected = ref<string[]>([])
 const selectedAll = ref<string[]>([])
 // 全选
@@ -40,7 +53,10 @@ const calculateTotal = () => {
 							v-for="item in cart"
 							:key="item"
 						>
-							<view class="w-full h-[190rpx] mb-2 flex items-center">
+							<view
+								class="w-full h-[190rpx] mb-2 flex items-center"
+								@click.stop="() => toFoodDetail(item)"
+							>
 								<uv-image
 									class="mr-2"
 									width="180rpx"
@@ -58,10 +74,22 @@ const calculateTotal = () => {
 											</view>
 										</view>
 										<view class="flex items-end">
-											<view class="flex text-sm">
-												<uv-icon class="mr-1" name="plus-circle" :size="20" color="#65c6b0" />
+											<view class="flex text-sm" @click.stop>
+												<uv-icon
+													class="mr-1 p-1"
+													name="plus-circle"
+													:size="24"
+													color="#65c6b0"
+													@click="plus"
+												/>
 												<uv-text bold size="18" :lines="1" :text="2" />
-												<uv-icon class="ml-1" name="minus-circle" :size="20" color="#65c6b0" />
+												<uv-icon
+													class="ml-1 p-1"
+													name="minus-circle"
+													:size="24"
+													color="#65c6b0"
+													@click="minus"
+												/>
 											</view>
 										</view>
 									</view>

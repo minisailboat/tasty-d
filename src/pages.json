@@ -11,11 +11,35 @@
 			"style": {
 				"navigationBarTitleText": "点餐"
 			}
+		},
+		{
+			"path": "pages/menu/index",
+			"style": {
+				"navigationBarTitleText": "菜单"
+			}
+		},
+		{
+			"path": "pages/menu/Detail",
+			"style": {
+				"navigationBarTitleText": "菜品详情"
+			}
+		},
+		{
+			"path": "pages/filter/index",
+			"style": {
+				"navigationBarTitleText": "筛选"
+			}
+		},
+		{
+			"path": "pages/order/Detail",
+			"style": {
+				"navigationBarTitleText": "订单详情"
+			}
 		}
 	],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
-		"navigationBarTitleText": "uni-app",
+		"navigationBarTitleText": "点餐",
 		"navigationBarBackgroundColor": "#F8F8F8",
 		"backgroundColor": "#F8F8F8",
 		"navigationStyle": "custom",
