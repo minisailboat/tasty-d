@@ -7,6 +7,12 @@
 	},
 	"pages": [
 		{
+			"path": "pages/auth/index",
+			"style": {
+				"navigationBarTitleText": "鉴权"
+			}
+		},
+		{
 			"path": "pages/Layout",
 			"style": {
 				"navigationBarTitleText": "点餐"

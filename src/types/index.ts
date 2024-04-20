@@ -1,8 +1,8 @@
-import type { TabbarEnum } from "@/enums";
+import type { TabbarEnum } from '@/enums'
 
 export interface TabbarItem {
-	key: TabbarEnum;
-	title: string;
-	icon: string;
-	selectedIcon: string;
+	key: TabbarEnum
+	title: string
+	icon: string
+	selectedIcon: string
 }

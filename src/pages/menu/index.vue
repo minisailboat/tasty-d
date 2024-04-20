@@ -5,7 +5,7 @@ import NavBar from '@/components/NavBar.vue'
 <template>
 	<div class="food h-screen flex flex-col bg-[#F7F7F7]">
 		<NavBar back />
-		菜品
+		店铺菜品
 	</div>
 </template>
 
