@@ -214,7 +214,12 @@ function toggleLogin() {
 				</view>
 				<uv-image :src="captchaUrl" width="218rpx" height="76rpx" mode="aspectFit" @click="getCaptcha()" />
 			</uv-form-item>
-			<uv-button type="primary" text="提交" customStyle="margin-top: 10px" @click="submit()"></uv-button>
+			<uv-button
+				type="primary"
+				text="提交"
+				customStyle="margin-top: 10px; background: #65c6b0; border: none"
+				@click="submit()"
+			></uv-button>
 			<uv-button text="登录" customStyle="margin-top: 10px" @click="toggleLogin()"></uv-button>
 		</uv-form>
 

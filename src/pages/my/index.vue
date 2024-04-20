@@ -47,7 +47,7 @@ function toLogout() {
 					class="w-3/4"
 					type="primary"
 					text="登录"
-					customStyle=" margin-top: 10px"
+					customStyle="margin-top: 10px; background: #65c6b0; border: none"
 					@click="toAuth(true)"
 				/>
 				<uv-button class="w-3/4" text="注册" customStyle=" margin-top: 10px" @click="toAuth(false)" />

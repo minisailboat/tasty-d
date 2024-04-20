@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { captchaApi } from '@/api/login'
 import { useUserStore } from '@/stores/user'
-import { computed, reactive, ref, watch, watchEffect } from 'vue'
+import { computed, reactive, ref, watchEffect } from 'vue'
 
 const props = defineProps({
 	show: Boolean,
@@ -18,10 +18,6 @@ const show = computed({
 	set(val) {
 		emits('update:show', val)
 	}
-})
-
-const register = computed(() => {
-	return props.registerData
 })
 
 // 表单
@@ -94,7 +90,12 @@ function toggleLogin() {
 				</view>
 				<uv-image :src="captchaUrl" width="218rpx" height="76rpx" mode="aspectFit" @click="getCaptcha()" />
 			</uv-form-item>
-			<uv-button type="primary" text="提交" customStyle="margin-top: 10px" @click="submit()"></uv-button>
+			<uv-button
+				type="primary"
+				text="提交"
+				customStyle="margin-top: 10px; background: #65c6b0; border: none"
+				@click="submit()"
+			></uv-button>
 			<uv-button text="注册" customStyle="margin-top: 10px" @click="toggleLogin()"></uv-button>
 		</uv-form>
 	</view>
