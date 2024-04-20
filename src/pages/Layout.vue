@@ -49,7 +49,7 @@ const toFilter = () => {
 <template>
 	<view class="h-screen flex flex-col bg-[#F7F7F7]">
 		<NavBar
-			v-show="activeTab.key !== TabbarEnum.MY"
+			v-show="![TabbarEnum.MY].includes(activeTab.key)"
 			:title="[TabbarEnum.ORDER, TabbarEnum.CART].includes(activeTab.key) ? activeTab.title : ''"
 			:class="activeTab.key === TabbarEnum.HOME ? '' : ''"
 		>

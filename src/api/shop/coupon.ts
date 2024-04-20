@@ -23,6 +23,18 @@ export function pageCouponApi(param: PageParam<Coupon>) {
 }
 
 /**
+ * 查询所有
+ * @returns
+ */
+export function queryCouponApi(param: Coupon = {}): Promise<ApiResult<Coupon[]>> {
+	return request({
+		url: Api.Common + '/noToken/query',
+		method: 'POST',
+		data: param
+	})
+}
+
+/**
  * 新增
  * @param param
  * @returns

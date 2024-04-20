@@ -1,22 +1,58 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { queryCouponApi } from '@/api/shop/coupon'
+import { receiveCouponApi } from '@/api/user'
+import type { Coupon } from '@/types/shop/coupon'
+import { onMounted, ref } from 'vue'
 
-const list = ref([
+const nammerData = ref<string[]>([
 	'https://cdn.uviewui.com/uview/swiper/swiper3.png',
 	'https://cdn.uviewui.com/uview/swiper/swiper2.png',
 	'https://cdn.uviewui.com/uview/swiper/swiper1.png'
 ])
-const toFoods = () => {
+
+/** 优惠卷 */
+const couponData = ref<Coupon[]>([])
+async function loadCoupon() {
+	const { data } = await queryCouponApi()
+	couponData.value = data!
+}
+/** 领取优惠卷 */
+const couponPopupRef = ref<any>(null)
+const activeCoupon = ref<Coupon>()
+function openCouponPopup(data: Coupon) {
+	activeCoupon.value = data
+	couponPopupRef.value.open()
+}
+async function receiveCoupon(id: string) {
+	const { success, message } = await receiveCouponApi(id)
+	if (success) {
+		loadCoupon()
+		couponPopupRef.value.close()
+		return
+	}
+	uni.showToast({
+		title: message,
+		icon: 'none'
+	})
+}
+
+/** 路由跳转 */
+function toFoods() {
 	uni.navigateTo({
 		url: '/pages/menu/index'
 	})
 }
-const toFoodDetail = (food: any) => {
+function toFoodDetail(food: any) {
 	console.log(food)
 	uni.navigateTo({
 		url: '/pages/menu/Detail'
 	})
 }
+
+/** 加载数据初始化 */
+onMounted(() => {
+	loadCoupon()
+})
 </script>
 
 <template>
@@ -24,67 +60,62 @@ const toFoodDetail = (food: any) => {
 		<!-- 轮播图 -->
 		<uv-swiper
 			class="mb-4"
-			:list="list"
+			:list="nammerData"
 			previousMargin="30"
 			nextMargin="30"
 			circular
 			radius="15"
 			bgColor="#F7F7F7"
 			height="170"
-			@click="(index: number) => toFoodDetail(list[index])"
+			@click="(index: number) => toFoodDetail(nammerData[index])"
 		/>
+		<!-- <view class="p-4">
+			<uv-input placeholder="前置图标" prefixIcon="search" prefixIconStyle="font-size: 22px;color: #909399" />
+		</view> -->
 		<!-- 优惠活动 -->
 		<view class="mb-4 flex flex-col">
 			<!-- 优惠标题 -->
 			<view class="mx-4 mb-2">
-				<uv-text bold size="16" :lines="1" :text="``" />
+				<uv-text bold size="16" :lines="1" :text="`优惠券`" />
 			</view>
 			<!-- 优惠列表 -->
 			<view class="pl-4 flex flex-nowrap overflow-x-scroll">
-				<view class="" v-for="item in 3" :key="item">
+				<view class="" v-for="(item, index) in couponData" :key="index">
 					<view
 						class="w-[250rpx] h-[150rpx] mr-4 p-2 box-border rounded-xl bg-white flex flex-col"
-						@click="() => toFoodDetail(item)"
+						@click="() => openCouponPopup(item)"
 					>
-						<uv-text bold size="14" :lines="1" :text="`香辣鸡腿堡(${item})`" />
+						<uv-text bold size="14" :lines="1" :text="item.label" />
 						<view class="flex text-sm text-gray-400">
 							<uv-icon class="mr-1" name="red-packet" :size="16" color="#9ca3af" />
-							<uv-text size="14" :lines="1" :text="`100`" />
+							<uv-text size="14" :lines="1" :text="item.money" />
 						</view>
 						<view class="flex text-sm text-gray-400">
-							<uv-icon class="mr-1" name="star-fill" :size="16" color="#9ca3af" />
-							<uv-text size="14" :lines="1" :text="`100`" />
+							<uv-icon class="mr-1" name="coupon" :size="16" color="#9ca3af" />
+							<uv-text size="14" :lines="1" :text="item.number" />
 						</view>
 					</view>
 				</view>
 			</view>
 		</view>
-		<!-- 优惠活动 -->
-		<view class="mb-4 flex flex-col">
-			<!-- 优惠标题 -->
-			<view class="mx-4 mb-2">
-				<uv-text bold size="16" :lines="1" :text="``" />
+		<!-- 领取优惠券 -->
+		<uv-popup ref="couponPopupRef" mode="bottom" :round="20">
+			<uv-list class="mt-4">
+				<uv-list-item :title="activeCoupon?.label"></uv-list-item>
+				<uv-list-item :title="activeCoupon?.description" :disabled="true"></uv-list-item>
+				<uv-list-item :title="'金额'" :rightText="activeCoupon?.money + '元'"></uv-list-item>
+				<uv-list-item :title="'剩余量'" :rightText="activeCoupon?.number + '张'"></uv-list-item>
+				<uv-list-item :title="'有效期'" :rightText="activeCoupon?.expireTime"></uv-list-item>
+			</uv-list>
+			<view class="p-4">
+				<uv-button
+					:text="'领取'"
+					type="primary"
+					customStyle="background: #65c6b0; border: none"
+					@click="receiveCoupon(String(activeCoupon?.id))"
+				/>
 			</view>
-			<!-- 优惠列表 -->
-			<view class="pl-4 flex flex-nowrap overflow-x-scroll">
-				<view class="relative" v-for="item in 3" :key="item">
-					<view
-						class="w-[350rpx] h-[200rpx] mr-4 p-3 box-border rounded-xl bg-white flex flex-col"
-						@click="() => toFoodDetail(item)"
-					>
-						<uv-text bold size="16" :lines="1" :text="`香辣鸡腿堡(${item})`" />
-						<view class="flex text-sm text-gray-400">
-							<uv-icon class="mr-1" name="red-packet" :size="16" color="#9ca3af" />
-							<uv-text size="14" :lines="1" :text="`100`" />
-						</view>
-						<view class="flex text-sm text-gray-400">
-							<uv-icon class="mr-1" name="star-fill" :size="16" color="#9ca3af" />
-							<uv-text size="14" :lines="1" :text="`100`" />
-						</view>
-					</view>
-				</view>
-			</view>
-		</view>
+		</uv-popup>
 		<!-- 推荐 -->
 		<view class="mb-4 flex flex-col">
 			<!-- 优惠标题 -->
