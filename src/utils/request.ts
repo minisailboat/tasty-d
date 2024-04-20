@@ -1,8 +1,6 @@
 import axios, { type AxiosResponse, type InternalAxiosRequestConfig } from 'axios'
 import { useUserStore } from '@/stores/user'
 
-console.log(import.meta.env.VITE_BASE_URL)
-
 const axiosConfig = {
 	baseURL: import.meta.env.VITE_BASE_URL,
 	// baseURL: '/',

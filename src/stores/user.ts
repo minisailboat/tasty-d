@@ -10,7 +10,6 @@ const storeSetup = () => {
 	const roles = ref<string[]>([]) // 当前用户角色
 	const permissions = ref<string[]>([]) // 当前角色权限标识集合
 	const isLogin = computed(() => {
-		console.log(token.value)
 		return token.value != null
 	})
 
