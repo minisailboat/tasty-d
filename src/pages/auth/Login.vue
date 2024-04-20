@@ -1,12 +1,14 @@
 <script setup lang="ts">
 import { captchaApi } from '@/api/login'
 import { useUserStore } from '@/stores/user'
-import { computed, reactive, ref, watchEffect } from 'vue'
+import { computed, reactive, ref, watch, watchEffect } from 'vue'
 
 const props = defineProps({
-	show: Boolean
+	show: Boolean,
+	registerData: {
+		type: Object
+	}
 })
-
 const emits = defineEmits(['update:show'])
 
 const show = computed({
@@ -18,11 +20,15 @@ const show = computed({
 	}
 })
 
+const register = computed(() => {
+	return props.registerData
+})
+
 // 表单
 const formRef = ref<any>(null)
 const formData = reactive({
-	account: 'superAdmin',
-	password: '123456',
+	account: props.registerData?.account ?? 'superAdmin',
+	password: props.registerData?.password ?? '123456',
 	code: '',
 	key: ''
 })
@@ -33,6 +39,7 @@ const rules = reactive({
 	}
 })
 
+// 验证码
 const captchaUrl = ref('')
 const getCaptcha = async () => {
 	const { code, data } = await captchaApi()
@@ -42,7 +49,6 @@ const getCaptcha = async () => {
 		formData.key = data?.key!
 	}
 }
-
 watchEffect(() => {
 	if (!show) return
 	getCaptcha()

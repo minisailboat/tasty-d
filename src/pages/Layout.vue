@@ -25,12 +25,12 @@ const tabbar = ref<TabbarItem[]>([
 		icon: 'file-text',
 		selectedIcon: 'file-text-fill'
 	},
-	{
-		key: TabbarEnum.CART,
-		title: '购物车',
-		icon: 'shopping-cart',
-		selectedIcon: 'shopping-cart-fill'
-	},
+	// {
+	// 	key: TabbarEnum.CART,
+	// 	title: '购物车',
+	// 	icon: 'shopping-cart',
+	// 	selectedIcon: 'shopping-cart-fill'
+	// },
 	{
 		key: TabbarEnum.MY,
 		title: '我的',
@@ -55,7 +55,7 @@ const toFilter = () => {
 		>
 			<template #left>
 				<view v-if="activeTab.key === TabbarEnum.HOME" class="pr-2 flex items-center">
-					<uv-icon name="scan" :size="28" />
+					<!-- <uv-icon name="scan" :size="28" /> -->
 					<!-- <uv-icon name="map" :size="23" />
 					<uv-text :lines="1" text="当前位置当前位置当前位置当前位置当前位置" /> -->
 				</view>

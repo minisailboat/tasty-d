@@ -1,7 +1,7 @@
 import { getUserInfoApi, loginApi, logoutApi } from '@/api/login'
 import type { LoginParam, LoginUserInfo } from '@/types/login'
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 
 const storeSetup = () => {
 	const token = ref<string | null>()
@@ -9,6 +9,10 @@ const storeSetup = () => {
 	const userInfo = ref<LoginUserInfo>()
 	const roles = ref<string[]>([]) // 当前用户角色
 	const permissions = ref<string[]>([]) // 当前角色权限标识集合
+	const isLogin = computed(() => {
+		console.log(token.value)
+		return token.value != null
+	})
 
 	// 登录
 	const login = async (params: LoginParam) => {
@@ -67,7 +71,7 @@ const storeSetup = () => {
 		token.value = null
 	}
 
-	return { userInfo, tokenName, token, roles, permissions, login, logout, getInfo, removeToken }
+	return { userInfo, tokenName, token, roles, permissions, isLogin, login, logout, getInfo, removeToken }
 }
 
 export const useUserStore = defineStore('user', storeSetup, {

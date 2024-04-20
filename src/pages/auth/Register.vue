@@ -1,12 +1,14 @@
 <script setup lang="ts">
-import { computed, reactive, ref } from 'vue'
-// import dayjs from 'dayjs'
+import { computed, reactive, ref, watchEffect } from 'vue'
+import dayjs from 'dayjs'
+import { captchaApi } from '@/api/login'
+import { userRegisterApi } from '@/api/system/user'
 
 const props = defineProps({
 	show: Boolean
 })
 
-const emits = defineEmits(['update:show'])
+const emits = defineEmits(['update:show', 'registerSuccess'])
 
 const show = computed({
 	get() {
@@ -41,47 +43,113 @@ function showSexSelect() {
 function sexSelect(e: any) {
 	console.log(e)
 	sexAction.value = e
-	formModel.sex = e.value
+	formData.sex = e.value
 }
 
 // 生日选择
 const birthdayRef = ref<any>(null)
-function birthdayConfirm(e: any) {
-	// console.log('生日选择', e, dayjs(e.value).format('YYYY-MM-DD HH:mm:ss'))
-	console.log('生日选择', e)
-}
-function formatterBirthday(type: string, value: any) {
-	console.log(type, value)
-
-	if (type === 'year') {
-		return `${value}年`
-	}
-	if (type === 'month') {
-		return `${value}月`
-	}
-	if (type === 'day') {
-		return `${value}日`
-	}
-	return value
-}
 
 //  表单
 const formRef = ref<any>(null)
-const formModel = reactive({
+const formData = reactive({
+	account: '',
 	username: '',
 	password: '',
-	email: '',
+	confirmPassword: '',
+	birthday: undefined,
 	sex: sexData[0].value,
-	phone: '',
-	birthday: null,
-	code: '1234'
+	email: '',
+	mobile: '',
+	key: '',
+	code: ''
 })
 const rules = reactive({
-	userInfo: {
-		name: [{ required: true, message: '请输入用户名', trigger: 'blur' }],
-		sex: [{ required: true, message: '请选择性别', trigger: 'change' }]
+	// userInfo: {
+	// 	name: [{ required: true, message: '请输入用户名', trigger: 'blur' }],
+	// 	sex: [{ required: true, message: '请选择性别', trigger: 'change' }]
+	// },
+	account: {
+		required: true,
+		message: '请输入账号',
+		trigger: 'blur'
+	},
+	username: {
+		required: true,
+		message: '请输入用户名',
+		trigger: 'blur'
+	},
+	password: {
+		required: true,
+		message: '请输入密码',
+		trigger: 'blur'
+	},
+	// 校验是否等于密码
+	confirmPassword: {
+		validator: (rule: { message: string }, value: string) => {
+			// 返回true表校验通过，返回false表示不通过
+			if (value.trim() === '') {
+				rule.message = '请确认密码'
+				return false
+			}
+			const isEq = value === formData.password
+			if (!isEq) {
+				rule.message = '两次密码输入不一致'
+			}
+			return isEq
+		},
+		message: '密码校验失败',
+		trigger: ['blur']
+	},
+	sex: {
+		required: true,
+		message: '请选择性别',
+		trigger: 'change'
+	},
+	code: {
+		required: true,
+		message: '请输入验证码',
+		trigger: 'blur'
 	}
 })
+
+// 验证码
+const captchaUrl = ref('')
+const getCaptcha = async () => {
+	const { code, data } = await captchaApi()
+	if (code === 0) {
+		captchaUrl.value = data?.base64 ?? ''
+		formData.code = data?.text ?? ''
+		formData.key = data?.key!
+	}
+}
+watchEffect(() => {
+	if (!show) return
+	getCaptcha()
+})
+
+// 提交
+async function submit() {
+	try {
+		await formRef.value?.validate()
+		const registerData = {
+			...formData,
+			birthday: dayjs(formData.birthday).format('YYYY-MM-DD')
+		}
+		const { success, message } = await userRegisterApi(registerData)
+		if (success) {
+			formRef.value?.resetFields()
+		}
+		uni.showToast({
+			title: message,
+			icon: 'none',
+			duration: 2000
+		})
+		emits('update:show', true)
+		emits('registerSuccess', registerData)
+	} catch (error) {
+		console.log(error)
+	}
+}
 
 // 切换登录
 function toggleLogin() {
@@ -92,23 +160,38 @@ function toggleLogin() {
 <template>
 	<view class="h-full p-10 mb-40 flex flex-col items-center">
 		<h2 class="text-2xl font-bold mb-4">注册</h2>
-		<uv-form class="w-[90%]" ref="formRef" labelPosition="left" :model="formModel" :rules="rules">
-			<uv-form-item label="" prop="formModel.username" borderBottom>
-				<uv-input v-model="formModel.username" placeholder="请输入账号" :border="'none'" />
+		<uv-form class="w-[90%]" ref="formRef" labelPosition="left" :model="formData" :rules="rules">
+			<uv-form-item label="" prop="account" borderBottom>
+				<uv-input v-model="formData.account" clearable placeholder="请输入账号" :border="'none'" />
 			</uv-form-item>
-			<uv-form-item label="" prop="formModel.password" borderBottom>
-				<uv-input v-model="formModel.password" placeholder="请输入密码" :border="'none'" />
+			<uv-form-item label="" prop="username" borderBottom>
+				<uv-input v-model="formData.username" clearable placeholder="请输入用户名" :border="'none'" />
 			</uv-form-item>
-			<uv-form-item label="" prop="formModel.password" borderBottom>
-				<uv-input v-model="formModel.password" placeholder="请确认密码" :border="'none'" />
+			<uv-form-item label="" prop="password" borderBottom>
+				<uv-input
+					v-model="formData.password"
+					clearable
+					type="password"
+					placeholder="请输入密码"
+					:border="'none'"
+				/>
 			</uv-form-item>
-			<uv-form-item label="" prop="formModel.email" borderBottom>
-				<uv-input v-model="formModel.email" placeholder="请输入邮箱" :border="'none'" />
+			<uv-form-item label="" prop="confirmPassword" borderBottom>
+				<uv-input
+					v-model="formData.confirmPassword"
+					clearable
+					type="password"
+					placeholder="请确认密码"
+					:border="'none'"
+				/>
 			</uv-form-item>
-			<!-- <uv-form-item label="角色" prop="model1.password" borderBottom> </uv-form-item> -->
-			<uv-form-item label="性别" prop="formModel.sex" borderBottom @click="showSexSelect">
+			<uv-form-item label="" prop="email" borderBottom>
+				<uv-input v-model="formData.email" clearable type="email" placeholder="请输入邮箱" :border="'none'" />
+			</uv-form-item>
+			<uv-form-item label="性别" prop="sex" borderBottom @click="showSexSelect">
 				<uv-input
 					v-model="sexAction.name"
+					clearable
 					disabled
 					disabledColor="#ffffff"
 					placeholder="请选择性别"
@@ -118,29 +201,20 @@ function toggleLogin() {
 					<uv-icon name="arrow-right"></uv-icon>
 				</template>
 			</uv-form-item>
-			<!-- <uv-form-item label="状态" prop="model1.password" borderBottom> </uv-form-item> -->
-			<uv-form-item label="手机" prop="formModel.phone" borderBottom>
-				<uv-input v-model="formModel.phone" placeholder="请输入手机" :border="'none'" />
+			<uv-form-item label="手机" prop="mobile" borderBottom>
+				<uv-input v-model="formData.mobile" clearable placeholder="请输入手机" :border="'none'" />
 			</uv-form-item>
-			<uv-form-item label="生日" prop="formModel.birthday" borderBottom @click="() => birthdayRef.open()">
-				<uv-datetime-picker
-					ref="birthdayRef"
-					v-model="formModel.birthday"
-					mode="date"
-					:formatter="formatterBirthday"
-					@confirm="birthdayConfirm"
-				/>
+			<uv-form-item label="生日" prop="birthday" borderBottom @click="() => birthdayRef.open()">
+				{{ dayjs(formData.birthday).format('YYYY-MM-DD') }}
+				<uv-datetime-picker ref="birthdayRef" v-model="formData.birthday" mode="date" />
 			</uv-form-item>
-			<uv-form-item label="" prop="model1.code" borderBottom>
-				<uv-input v-model="formModel.code" placeholder="请输入验证码" :border="'none'" />
-				<uv-image
-					width="100px"
-					height="40px"
-					@click="() => {}"
-					url="https://www.baidu.com/img/bd_logo1.png?where=super"
-				/>
+			<uv-form-item class="w-full" label="" prop="code" borderBottom>
+				<view class="w-4/6 h-[38px] mr-2">
+					<uv-input class="flex-1" v-model="formData.code" clearable />
+				</view>
+				<uv-image :src="captchaUrl" width="218rpx" height="76rpx" mode="aspectFit" @click="getCaptcha()" />
 			</uv-form-item>
-			<uv-button type="primary" text="提交" customStyle="margin-top: 10px" @click="() => {}"></uv-button>
+			<uv-button type="primary" text="提交" customStyle="margin-top: 10px" @click="submit()"></uv-button>
 			<uv-button text="登录" customStyle="margin-top: 10px" @click="toggleLogin()"></uv-button>
 		</uv-form>
 

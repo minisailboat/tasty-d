@@ -21,8 +21,8 @@ const request = axios.create(axiosConfig)
  */
 const showErrorMsg = (code: number, msg?: string) => {
 	const userStore = useUserStore()
-	uni.hideToast()
-	uni.hideLoading()
+	// uni.hideToast()
+	// uni.hideLoading()
 	switch (code) {
 		case 401: {
 			console.log('登录过期')
