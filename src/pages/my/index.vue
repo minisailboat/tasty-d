@@ -47,8 +47,10 @@ function toCoupon() {
 
 // 初始化
 onMounted(() => {
-	billStore.loadBalance()
-	couponStore.loadCoupon()
+	if (isLogin.value) {
+		billStore.loadBalance()
+		couponStore.loadCoupon()
+	}
 })
 </script>
 

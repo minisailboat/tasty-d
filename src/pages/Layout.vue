@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onLoad } from '@dcloudio/uni-app'
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, toRef } from 'vue'
 import NavBar from '@/components/NavBar.vue'
 import Tabbar from '@/components/Tabbar.vue'
 import Home from './home/index.vue'
@@ -46,9 +46,11 @@ const toFilter = () => {
 	})
 }
 
+// 获取用户信息
 const userStore = useUserStore()
+const isLogin = toRef(userStore, 'isLogin')
 onMounted(() => {
-	userStore.getInfo()
+	isLogin.value && userStore.getInfo()
 })
 </script>
 
