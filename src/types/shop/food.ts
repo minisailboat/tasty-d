@@ -3,12 +3,13 @@ export interface Food {
 	createTime?: string
 	createdBy?: number
 	description?: string
-	id?: string
+	id?: string | number
 	label?: string
 	price?: string
 	sortValue?: number
 	state?: number
-	storeId?: number
+	storeId?: string | number
+	categoryId?: string | number
 	updateTime?: string
 	updatedBy?: number
 }

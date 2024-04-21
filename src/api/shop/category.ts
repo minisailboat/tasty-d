@@ -26,7 +26,7 @@ export function pageCategoryApi(param: PageParam<any>) {
  * 查询所有
  * @returns
  */
-export function queryCategoryApi(param: Category = {}): Promise<ApiResult<Category[]>> {
+export function queryFoodCategoryApi(param: Category = {}): Promise<ApiResult<Category[]>> {
 	return request({
 		url: Api.Common + '/noToken/query',
 		method: 'POST',

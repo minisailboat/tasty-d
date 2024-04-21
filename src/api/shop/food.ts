@@ -26,8 +26,13 @@ export function pageFoodApi(param: PageParam<any>) {
  * 查询所有
  * @returns
  */
-export function queryFoodApi(param: Food = {}) {
-	return request.post<ApiResult<Food[]>>(Api.Query, { data: param })
+export function queryFoodApi(param: Food = {}): Promise<ApiResult<Food[]>> {
+	// return request.post<ApiResult<Food[]>>(Api.Query, { data: param })
+	return request({
+		url: Api.Common + '/noToken/query',
+		method: 'POST',
+		data: param
+	})
 }
 
 /**

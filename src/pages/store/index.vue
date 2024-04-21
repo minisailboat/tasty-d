@@ -1,24 +1,61 @@
 <script setup lang="ts">
+import { queryFoodCategoryApi } from '@/api/shop/category'
+import { queryFoodApi } from '@/api/shop/food'
 import NavBar from '@/components/NavBar.vue'
-import { useStoreStore } from '@/stores/shop/store'
+import type { Category } from '@/types/shop/category'
 import type { Food } from '@/types/shop/food'
 import type { Store } from '@/types/shop/store'
-import { computed, getCurrentInstance, onMounted, ref, toRef } from 'vue'
+import { getCurrentInstance, onMounted, ref, watchEffect } from 'vue'
 
 /** 店铺信息 */
 const storeData = ref<Store>()
 
-/** 店铺 Top 菜品数据 */
-const storeStore = useStoreStore()
-const storeFoodTopMap = toRef(storeStore, 'storeFoodTopMap')
-const foodData = computed(() => {
-	const arr: any[] = []
-	Array.from(storeFoodTopMap.value.values()).map((item) => {
-		item.map((i: any) => {
-			arr.push(i)
-		})
+/** 店铺菜品分类 */
+const activeCategory = ref<Category>()
+const storeCategoryData = ref<Category[]>([])
+async function loadStoreFoodCategory(storeId: string) {
+	const { data } = await queryFoodCategoryApi({ storeId })
+	if (data && data?.length > 0) {
+		storeCategoryData.value = data
+	}
+}
+function toggleCategory(category?: Category) {
+	activeCategory.value = category
+}
+
+/** 店铺菜品 */
+const storeFoodData = ref<Food[]>([])
+async function loadStoreFood(param: Food) {
+	const { data } = await queryFoodApi(param)
+	if (data && data?.length > 0) {
+		storeFoodData.value = data
+	}
+}
+watchEffect(() => {
+	if (storeData.value?.id) {
+		const param: Food = {
+			storeId: storeData.value.id
+		}
+		if (activeCategory.value) {
+			param['categoryId'] = `${activeCategory.value?.id}`
+		}
+		loadStoreFood(param)
+	}
+})
+
+onMounted(() => {
+	// 监听事件
+	const instance = getCurrentInstance()?.proxy
+	const eventChannel = instance?.getOpenerEventChannel()
+	eventChannel.on('openStore', (store: Store) => {
+		// 处理事件
+		storeData.value = store
+
+		// 加载店铺菜品分类
+		if (storeData?.value?.id) {
+			loadStoreFoodCategory(storeData.value.id)
+		}
 	})
-	return arr
 })
 
 /** 路由跳转 */
@@ -30,17 +67,6 @@ function toFoodDetail(food: Food) {
 		}
 	})
 }
-
-onMounted(() => {
-	// 监听事件
-	const instance = getCurrentInstance()?.proxy
-	const eventChannel = instance?.getOpenerEventChannel()
-	eventChannel.on('openStore', (store: Store) => {
-		// 处理事件
-		console.log('openStore', store)
-		storeData.value = store
-	})
-})
 </script>
 
 <template>
@@ -54,14 +80,28 @@ onMounted(() => {
 					<uv-text size="14" :lines="2" :customStyle="{ margin: '10rpx 0' }" :text="storeData?.description" />
 				</view>
 				<view class="w-full my-2">
-					<view class="w-full flex flex-nowrap overflow-auto">
+					<view v-if="storeData?.id" class="w-full flex flex-nowrap overflow-auto">
 						<div
-							class="px-3 py-1 min-w-[100rpx] flex bg-gray-200 rounded-full overflow-hidden"
-							:class="{ 'mr-4': i !== 10 }"
-							v-for="i in 10"
-							:key="i"
+							class="px-3 mr-4 py-1 min-w-[100rpx] flex justify-center rounded-full overflow-hidden"
+							:class="!activeCategory ? 'bg-[#65c6b0] text-white' : 'bg-gray-200'"
+							@click="toggleCategory()"
 						>
-							<uv-text size="14" :lines="1" :customStyle="{}" :text="`分类分类分类${i}`" />
+							<!-- <uv-text size="14" :lines="1" :customStyle="{}" :text="`ALL`" /> -->
+							<text>ALL</text>
+						</div>
+						<div
+							class="px-3 py-1 min-w-[100rpx] flex justify-center rounded-full overflow-hidden"
+							v-for="(category, index) in storeCategoryData"
+							:key="index"
+							:class="{
+								'mr-4': index !== storeCategoryData.length - 1,
+								'bg-gray-200': activeCategory?.id !== category.id,
+								'bg-[#65c6b0] text-white': activeCategory?.id === category.id
+							}"
+							@click="toggleCategory(category)"
+						>
+							<!-- <uv-text size="14" :lines="1" :customStyle="{}" :text="category.label" /> -->
+							<text class="text-nowrap text-ellipsis">{{ category.label }}</text>
 						</div>
 					</view>
 				</view>
@@ -70,7 +110,7 @@ onMounted(() => {
 					<view class="">
 						<view
 							class="w-full h-[190rpx] mb-2 flex items-center"
-							v-for="(foodItem, foodIndex) in foodData"
+							v-for="(foodItem, foodIndex) in storeFoodData"
 							:key="foodIndex"
 							@click="() => toFoodDetail(foodItem)"
 						>

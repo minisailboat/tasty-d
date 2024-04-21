@@ -6,7 +6,7 @@ export interface Category {
 	label?: string
 	sortValue?: number
 	state?: number
-	storeId?: number
+	storeId?: number | string
 	updateTime?: string
 	updatedBy?: number
 }
