@@ -3,13 +3,8 @@ import { queryCouponApi } from '@/api/shop/coupon'
 import { receiveCouponApi } from '@/api/user'
 import { useStoreStore } from '@/stores/shop/store'
 import type { Coupon } from '@/types/shop/coupon'
-import { onMounted, ref, toRef } from 'vue'
-
-const nammerData = ref<string[]>([
-	'https://cdn.uviewui.com/uview/swiper/swiper3.png',
-	'https://cdn.uviewui.com/uview/swiper/swiper2.png',
-	'https://cdn.uviewui.com/uview/swiper/swiper1.png'
-])
+import type { Food } from '@/types/shop/food'
+import { computed, onMounted, ref, toRef } from 'vue'
 
 /** 优惠卷数据 */
 const couponData = ref<Coupon[]>([])
@@ -42,16 +37,34 @@ async function receiveCoupon(id: string) {
 const storeStore = useStoreStore()
 const storeData = toRef(storeStore, 'storeData')
 
+/** 店铺 Top 菜品数据 */
+const storeFoodTopMap = toRef(storeStore, 'storeFoodTopMap')
+
+/** 轮播图数据 */
+// const nammerData = ref<string[]>([
+// 	'https://cdn.uviewui.com/uview/swiper/swiper3.png',
+// 	'https://cdn.uviewui.com/uview/swiper/swiper2.png',
+// 	'https://cdn.uviewui.com/uview/swiper/swiper1.png'
+// ])
+const nammerData = computed(() => {
+	return Array.from(storeFoodTopMap.value.values())
+		.filter((item) => item.length > 0)
+		.map((item) => item[0])
+})
+console.log(nammerData.value)
+
 /** 路由跳转 */
 function toFoods() {
 	uni.navigateTo({
 		url: '/pages/menu/index'
 	})
 }
-function toFoodDetail(food: any) {
-	console.log(food)
+function toFoodDetail(food: Food) {
 	uni.navigateTo({
-		url: '/pages/menu/Detail'
+		url: '/pages/menu/Detail',
+		success({ eventChannel }) {
+			eventChannel.emit('openFood', food.id)
+		}
 	})
 }
 
@@ -69,7 +82,7 @@ onMounted(() => {
 		<!-- 轮播图 -->
 		<uv-swiper
 			class="mb-4"
-			:list="nammerData"
+			:list="nammerData.map((i) => i.cover ?? '')"
 			previousMargin="30"
 			nextMargin="30"
 			circular
@@ -126,34 +139,34 @@ onMounted(() => {
 			</view>
 		</uv-popup>
 		<!-- 店铺 -->
-		<view class="mb-4 flex flex-col" v-for="(storeItem, storeIndex) in storeData" :key="storeIndex">
-			<!-- 优惠标题 -->
+		<view
+			class="mb-4 flex flex-col"
+			v-for="(storeItem, storeIndex) in storeData"
+			:key="storeIndex"
+			v-show="storeFoodTopMap.get(storeItem.id).length > 0"
+		>
 			<view class="mx-4 mb-2 flex">
 				<uv-text bold size="16" :lines="1" :text="storeItem.label" />
 				<uv-button shape="circle" :plain="true" :hairline="true" size="small" @click="toFoods">更多</uv-button>
 			</view>
-			<!-- 列表 -->
 			<view class="px-4">
 				<view
 					class="w-full h-[190rpx] mb-2 flex items-center"
-					v-for="item in 3"
-					:key="item"
-					@click="() => toFoodDetail(item)"
+					v-for="(foodItem, foodIndex) in storeFoodTopMap.get(storeItem.id)"
+					:key="foodIndex"
+					@click="() => toFoodDetail(foodItem)"
 				>
-					<uv-image class="mr-2" width="180rpx" height="180rpx" radius="12" :src="storeItem.cover" />
-					<view class="w-full h-full p-2 rounded-xl bg-white box-border flex flex-col">
-						<uv-text bold size="16" :lines="1" :text="`香辣鸡腿堡(${item})`" />
-						<view class="flex text-sm text-gray-400">
-							<uv-icon class="mr-1" name="map" :size="16" color="#9ca3af" />
-							<uv-text size="14" :lines="1" :text="`100`" />
+					<uv-image class="mr-2" width="180rpx" height="180rpx" radius="12" :src="foodItem.cover" />
+					<view class="w-full h-full p-3 rounded-xl bg-white box-border flex flex-col">
+						<view class="mb-3 flex justify-between">
+							<uv-text bold size="16" :lines="1" :text="foodItem.label" />
+							<view class="flex justify-end text-sm text-gray-400">
+								<uv-icon class="mr-1" name="red-packet" :size="16" color="#9ca3af" />
+								<uv-text size="18" :lines="1" :text="foodItem.price" />
+							</view>
 						</view>
 						<view class="flex text-sm text-gray-400">
-							<uv-icon class="mr-1" name="red-packet" :size="16" color="#9ca3af" />
-							<uv-text size="14" :lines="1" :text="`100`" />
-						</view>
-						<view class="flex text-sm text-gray-400">
-							<uv-icon class="mr-1" name="star-fill" :size="16" color="#9ca3af" />
-							<uv-text size="14" :lines="1" :text="`100`" />
+							<uv-text size="14" :lines="2" :text="foodItem.description" />
 						</view>
 					</view>
 				</view>

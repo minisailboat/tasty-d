@@ -7,7 +7,6 @@ export const useBillStore = defineStore('bill', () => {
 	const billData = ref<Bill[]>([]) // 账单数据
 
 	async function loadBalance() {
-		console.log('loadBalance')
 		const { data } = await queryBalanceSelfApi()
 		balance.value = data ?? 0
 	}
