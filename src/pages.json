@@ -19,13 +19,13 @@
 			}
 		},
 		{
-			"path": "pages/menu/index",
+			"path": "pages/store/index",
 			"style": {
 				"navigationBarTitleText": "菜单"
 			}
 		},
 		{
-			"path": "pages/menu/Detail",
+			"path": "pages/store/Detail",
 			"style": {
 				"navigationBarTitleText": "菜品详情"
 			}

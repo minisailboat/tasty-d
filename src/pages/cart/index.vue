@@ -12,7 +12,7 @@ const minus = () => {
 const toFoodDetail = (food: any) => {
 	console.log(food)
 	uni.navigateTo({
-		url: '/pages/menu/Detail'
+		url: '/pages/store/Detail'
 	})
 }
 // 选择

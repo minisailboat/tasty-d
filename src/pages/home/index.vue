@@ -56,12 +56,12 @@ console.log(nammerData.value)
 /** 路由跳转 */
 function toFoods() {
 	uni.navigateTo({
-		url: '/pages/menu/index'
+		url: '/pages/store/index'
 	})
 }
 function toFoodDetail(food: Food) {
 	uni.navigateTo({
-		url: '/pages/menu/Detail',
+		url: '/pages/store/Detail',
 		success({ eventChannel }) {
 			eventChannel.emit('openFood', food.id)
 		}
