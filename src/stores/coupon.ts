@@ -11,14 +11,8 @@ export const useCouponStore = defineStore('coupon', () => {
 	const usedData = computed(() => couponData.value.filter((item: any) => item.state === 2))
 	const expiredData = computed(() => couponData.value.filter((item: any) => item.state === 3))
 	async function loadCoupon(state?: number) {
-		const { success, message, data } = await queryCouponSelfApi(state)
-		if (success) {
-			couponData.value = data ?? []
-		}
-		// uni.showToast({
-		// 	title: success ? message : '获取优惠券失败',
-		// 	icon: 'none'
-		// })
+		const { data } = await queryCouponSelfApi(state)
+		couponData.value = data ?? []
 	}
 
 	return { couponData, total, unusedData, usedData, expiredData, loadCoupon }

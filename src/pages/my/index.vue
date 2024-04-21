@@ -2,11 +2,16 @@
 import { useUserStore } from '@/stores/user'
 import { onMounted, toRef } from 'vue'
 import { useCouponStore } from '@/stores/coupon'
+import { useBillStore } from '@/stores/bill'
 
 // 获取用户信息
 const userStore = useUserStore()
 const isLogin = toRef(userStore, 'isLogin')
 const userInfo = toRef(userStore, 'userInfo')
+
+// 账单信息
+const billStore = useBillStore()
+const balance = toRef(billStore, 'balance')
 
 // 优惠券信息
 const couponStore = useCouponStore()
@@ -42,7 +47,7 @@ function toCoupon() {
 
 // 初始化
 onMounted(() => {
-	// 获取优惠券
+	billStore.loadBalance()
 	couponStore.loadCoupon()
 })
 </script>
@@ -83,7 +88,7 @@ onMounted(() => {
 				<view class="w-3/4 h-10 mb-4 rounded bg-[#04041508] flex justify-center items-center" @click="toBill()">
 					<uv-icon class="mr-4 p-2" name="red-packet" bold size="24" color="#c8c8d3" />
 					<uv-text size="16" :lines="1" :text="`我的余额`" />
-					<span class="pr-1">{{ 0 }}</span>
+					<span class="pr-1">{{ balance }}</span>
 					<uv-icon class="p-2" name="arrow-right" size="20" color="#c8c8d3" />
 				</view>
 				<view

@@ -61,7 +61,6 @@ const storeSetup = () => {
 				success: () => {}
 			})
 		}
-		console.log('userInfo', data)
 		userInfo.value = data
 	}
 

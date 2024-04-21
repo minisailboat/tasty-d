@@ -4,7 +4,8 @@ import request from '@/utils/request'
 
 enum Api {
 	Coupon = `/user/sppUserCoupon`,
-	Wallet = `/user/userWallet`
+	Wallet = `/user/userWallet`,
+	Bill = `/bill/bill`
 }
 
 /**
@@ -40,6 +41,17 @@ export function queryCouponSelfApi(state?: number): Promise<ApiResult<Coupon[]>>
 export function queryBalanceSelfApi(): Promise<ApiResult<number>> {
 	return request({
 		url: `${Api.Wallet}/queryBalanceSelf`,
+		method: 'GET'
+	})
+}
+
+/**
+ * 自己的账单
+ * @returns
+ */
+export function queryBillSelfApi(): Promise<ApiResult<Bill[]>> {
+	return request({
+		url: `${Api.Bill}/queryBillSelf`,
 		method: 'GET'
 	})
 }

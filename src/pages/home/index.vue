@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { queryCouponApi } from '@/api/shop/coupon'
 import { receiveCouponApi } from '@/api/user'
+import { useStoreStore } from '@/stores/shop/store'
 import type { Coupon } from '@/types/shop/coupon'
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, toRef } from 'vue'
 
 const nammerData = ref<string[]>([
 	'https://cdn.uviewui.com/uview/swiper/swiper3.png',
@@ -10,12 +11,13 @@ const nammerData = ref<string[]>([
 	'https://cdn.uviewui.com/uview/swiper/swiper1.png'
 ])
 
-/** 优惠卷 */
+/** 优惠卷数据 */
 const couponData = ref<Coupon[]>([])
 async function loadCoupon() {
 	const { data } = await queryCouponApi()
 	couponData.value = data!
 }
+
 /** 领取优惠卷 */
 const couponPopupRef = ref<any>(null)
 const activeCoupon = ref<Coupon>()
@@ -36,6 +38,10 @@ async function receiveCoupon(id: string) {
 	})
 }
 
+/** 店铺数据 */
+const storeStore = useStoreStore()
+const storeData = toRef(storeStore, 'storeData')
+
 /** 路由跳转 */
 function toFoods() {
 	uni.navigateTo({
@@ -51,7 +57,10 @@ function toFoodDetail(food: any) {
 
 /** 加载数据初始化 */
 onMounted(() => {
+	// 加载优券
 	loadCoupon()
+	// 加载店铺
+	storeStore.loadStore()
 })
 </script>
 
@@ -116,11 +125,11 @@ onMounted(() => {
 				/>
 			</view>
 		</uv-popup>
-		<!-- 推荐 -->
-		<view class="mb-4 flex flex-col">
+		<!-- 店铺 -->
+		<view class="mb-4 flex flex-col" v-for="(storeItem, storeIndex) in storeData" :key="storeIndex">
 			<!-- 优惠标题 -->
 			<view class="mx-4 mb-2 flex">
-				<uv-text bold size="16" :lines="1" :text="`推荐`" />
+				<uv-text bold size="16" :lines="1" :text="storeItem.label" />
 				<uv-button shape="circle" :plain="true" :hairline="true" size="small" @click="toFoods">更多</uv-button>
 			</view>
 			<!-- 列表 -->
@@ -131,13 +140,7 @@ onMounted(() => {
 					:key="item"
 					@click="() => toFoodDetail(item)"
 				>
-					<uv-image
-						class="mr-2"
-						width="180rpx"
-						height="180rpx"
-						radius="12"
-						src="https://cdn.uviewui.com/uview/album/1.jpg"
-					/>
+					<uv-image class="mr-2" width="180rpx" height="180rpx" radius="12" :src="storeItem.cover" />
 					<view class="w-full h-full p-2 rounded-xl bg-white box-border flex flex-col">
 						<uv-text bold size="16" :lines="1" :text="`香辣鸡腿堡(${item})`" />
 						<view class="flex text-sm text-gray-400">

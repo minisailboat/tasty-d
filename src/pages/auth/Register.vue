@@ -59,7 +59,7 @@ const formData = reactive({
 	birthday: undefined,
 	sex: sexData[0].value,
 	email: '',
-	mobile: '',
+	mobile: null,
 	key: '',
 	code: ''
 })

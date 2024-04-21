@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onLoad } from '@dcloudio/uni-app'
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import NavBar from '@/components/NavBar.vue'
 import Tabbar from '@/components/Tabbar.vue'
 import Home from './home/index.vue'
@@ -9,6 +9,7 @@ import Cart from './cart/index.vue'
 import My from './my/index.vue'
 import type { TabbarItem } from '@/types/index'
 import { TabbarEnum } from '@/enums'
+import { useUserStore } from '@/stores/user'
 
 onLoad(() => {})
 
@@ -44,6 +45,11 @@ const toFilter = () => {
 		url: '/pages/filter/index'
 	})
 }
+
+const userStore = useUserStore()
+onMounted(() => {
+	userStore.getInfo()
+})
 </script>
 
 <template>
