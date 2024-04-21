@@ -34,7 +34,7 @@ export function queryFoodApi(param: Food = {}) {
  * 获取指定店铺 Top n 菜品
  */
 export function queryFoodTopApi(storeId: string, top: number) {
-	return request.get<ApiResult<Food[]>>(`${Api.Common}/${storeId}/top/${top}`)
+	return request.get<ApiResult<Food[]>>(`${Api.Common}/noToken/${storeId}/top/${top}`)
 }
 
 /**

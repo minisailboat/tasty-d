@@ -7,13 +7,21 @@ export const useBillStore = defineStore('bill', () => {
 	const billData = ref<Bill[]>([]) // 账单数据
 
 	async function loadBalance() {
-		const { data } = await queryBalanceSelfApi()
-		balance.value = data ?? 0
+		try {
+			const { data } = await queryBalanceSelfApi()
+			balance.value = data ?? 0
+		} catch (error) {
+			console.log(error)
+		}
 	}
 
 	async function loadBill() {
-		const { data } = await queryBillSelfApi()
-		billData.value = data ?? []
+		try {
+			const { data } = await queryBillSelfApi()
+			billData.value = data ?? []
+		} catch (error) {
+			console.log(error)
+		}
 	}
 
 	return { balance, billData, loadBalance, loadBill }

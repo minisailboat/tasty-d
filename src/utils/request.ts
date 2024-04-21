@@ -26,13 +26,14 @@ const showErrorMsg = (code: number, msg?: string) => {
 			console.log('登录过期')
 			// 登录过期处理
 			uni.showToast({
-				title: msg ?? '登录状态已过期',
+				// title: msg ?? '登录状态已过期',
+				title: '请先登录',
 				icon: 'none',
 				duration: 2000,
 				success: () => {
 					console.log('登录过期success')
 					userStore.removeToken()
-					uni.navigateTo({ url: '/pages/auth/index' })
+					// uni.navigateTo({ url: '/pages/auth/index' })
 				}
 			})
 			break

@@ -27,7 +27,7 @@ export function pageStoreApi(param: PageParam<any>) {
  * @returns
  */
 export function queryStoreApi(param: Store = {}) {
-	return request.post<Store[]>(Api.Query, { data: param })
+	return request.post<Store[]>(Api.Common + '/noToken/query', { data: param })
 }
 
 /**

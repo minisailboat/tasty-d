@@ -1,5 +1,5 @@
 import type { ApiResult, PageParam, PageResult, UpdateStateParam } from '@/types/global'
-import type { CategorySaveParam, CategoryUpdateParam } from '@/types/shop/category'
+import type { Category, CategorySaveParam, CategoryUpdateParam } from '@/types/shop/category'
 import request from '@/utils/request'
 
 const basePath = '/shop/shopStoreFoodCategory'
@@ -18,6 +18,18 @@ enum Api {
  */
 export function pageCategoryApi(param: PageParam<any>) {
 	return request.post<ApiResult<PageResult<any>>>(Api.Page, {
+		data: param
+	})
+}
+
+/**
+ * 查询所有
+ * @returns
+ */
+export function queryCategoryApi(param: Category = {}): Promise<ApiResult<Category[]>> {
+	return request({
+		url: Api.Common + '/noToken/query',
+		method: 'POST',
 		data: param
 	})
 }

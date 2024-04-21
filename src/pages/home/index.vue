@@ -4,6 +4,7 @@ import { receiveCouponApi } from '@/api/user'
 import { useStoreStore } from '@/stores/shop/store'
 import type { Coupon } from '@/types/shop/coupon'
 import type { Food } from '@/types/shop/food'
+import type { Store } from '@/types/shop/store'
 import { computed, onMounted, ref, toRef } from 'vue'
 
 /** 优惠卷数据 */
@@ -41,29 +42,32 @@ const storeData = toRef(storeStore, 'storeData')
 const storeFoodTopMap = toRef(storeStore, 'storeFoodTopMap')
 
 /** 轮播图数据 */
-// const nammerData = ref<string[]>([
+// const bannerData = ref<string[]>([
 // 	'https://cdn.uviewui.com/uview/swiper/swiper3.png',
 // 	'https://cdn.uviewui.com/uview/swiper/swiper2.png',
 // 	'https://cdn.uviewui.com/uview/swiper/swiper1.png'
 // ])
-const nammerData = computed(() => {
+const bannerData = computed(() => {
 	return Array.from(storeFoodTopMap.value.values())
 		.filter((item) => item.length > 0)
 		.map((item) => item[0])
 })
-console.log(nammerData.value)
+console.log(bannerData.value)
 
 /** 路由跳转 */
-function toFoods() {
+function toStore(store: Store) {
 	uni.navigateTo({
-		url: '/pages/store/index'
+		url: '/pages/store/index',
+		success({ eventChannel }) {
+			eventChannel.emit('openStore', store)
+		}
 	})
 }
 function toFoodDetail(food: Food) {
 	uni.navigateTo({
 		url: '/pages/store/Detail',
 		success({ eventChannel }) {
-			eventChannel.emit('openFood', food.id)
+			eventChannel.emit('openFood', food)
 		}
 	})
 }
@@ -82,14 +86,14 @@ onMounted(() => {
 		<!-- 轮播图 -->
 		<uv-swiper
 			class="mb-4"
-			:list="nammerData.map((i) => i.cover ?? '')"
+			:list="bannerData.map((i) => i.cover ?? '')"
 			previousMargin="30"
 			nextMargin="30"
 			circular
 			radius="15"
 			bgColor="#F7F7F7"
 			height="170"
-			@click="(index: number) => toFoodDetail(nammerData[index])"
+			@click="(index: number) => toFoodDetail(bannerData[index])"
 		/>
 		<!-- <view class="p-4">
 			<uv-input placeholder="前置图标" prefixIcon="search" prefixIconStyle="font-size: 22px;color: #909399" />
@@ -147,7 +151,9 @@ onMounted(() => {
 		>
 			<view class="mx-4 mb-2 flex">
 				<uv-text bold size="16" :lines="1" :text="storeItem.label" />
-				<uv-button shape="circle" :plain="true" :hairline="true" size="small" @click="toFoods">更多</uv-button>
+				<uv-button shape="circle" :plain="true" :hairline="true" size="small" @click="toStore(storeItem)">
+					更多
+				</uv-button>
 			</view>
 			<view class="px-4">
 				<view

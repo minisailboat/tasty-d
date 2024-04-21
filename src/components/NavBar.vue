@@ -11,6 +11,10 @@ const props = defineProps({
 	back: {
 		type: Boolean,
 		default: false
+	},
+	backIconColor: {
+		type: String,
+		default: '#000'
 	}
 })
 
@@ -24,7 +28,7 @@ const back = () => {
 		<view class="flex-1 h-full flex justify-start items-center">
 			<slot name="left">
 				<view v-if="props.back" class="pr-2 flex items-center">
-					<uv-icon name="arrow-left" :size="28" @click="() => back()" />
+					<uv-icon name="arrow-left" :color="props.backIconColor" :size="28" @click="() => back()" />
 				</view>
 			</slot>
 		</view>

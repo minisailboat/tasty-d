@@ -61,7 +61,7 @@ onMounted(() => {
 		>
 			<template #left>
 				<view v-if="activeTab.key === TabbarEnum.HOME" class="pr-2 flex items-center">
-					<!-- <uv-icon name="scan" :size="28" /> -->
+					<uv-icon name="scan" :size="28" />
 					<!-- <uv-icon name="map" :size="23" />
 					<uv-text :lines="1" text="当前位置当前位置当前位置当前位置当前位置" /> -->
 				</view>
