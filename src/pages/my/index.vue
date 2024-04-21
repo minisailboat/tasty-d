@@ -1,11 +1,18 @@
 <script setup lang="ts">
 import { useUserStore } from '@/stores/user'
-import { toRef } from 'vue'
+import { onMounted, toRef } from 'vue'
+import { useCouponStore } from '@/stores/coupon'
 
+// 获取用户信息
 const userStore = useUserStore()
 const isLogin = toRef(userStore, 'isLogin')
 const userInfo = toRef(userStore, 'userInfo')
 
+// 优惠券信息
+const couponStore = useCouponStore()
+const couponTotal = toRef(couponStore, 'total')
+
+// 路由跳转
 function toAuth(isLogin: boolean) {
 	uni.navigateTo({
 		url: '/pages/auth/index',
@@ -14,7 +21,6 @@ function toAuth(isLogin: boolean) {
 		}
 	})
 }
-
 function toLogout() {
 	uni.showToast({
 		title: '正在退出登录...',
@@ -23,6 +29,22 @@ function toLogout() {
 	})
 	userStore.logout()
 }
+function toBill() {
+	uni.navigateTo({
+		url: '/pages/bill/index'
+	})
+}
+function toCoupon() {
+	uni.navigateTo({
+		url: '/pages/coupon/index'
+	})
+}
+
+// 初始化
+onMounted(() => {
+	// 获取优惠券
+	couponStore.loadCoupon()
+})
 </script>
 
 <template>
@@ -58,17 +80,20 @@ function toLogout() {
 					<uv-text size="16" :lines="1" :text="userInfo?.username" />
 					<!-- <uv-icon class="p-2" name="arrow-right" size="20" color="#c8c8d3" /> -->
 				</view>
-				<view class="w-3/4 h-10 mb-4 rounded bg-[#04041508] flex justify-center items-center">
+				<view class="w-3/4 h-10 mb-4 rounded bg-[#04041508] flex justify-center items-center" @click="toBill()">
 					<uv-icon class="mr-4 p-2" name="red-packet" bold size="24" color="#c8c8d3" />
 					<uv-text size="16" :lines="1" :text="`我的余额`" />
-					<!-- <uv-icon class="p-2" name="arrow-right" size="20" color="#c8c8d3" /> -->
-					<span class="pr-4">{{ 0 }}</span>
+					<span class="pr-1">{{ 0 }}</span>
+					<uv-icon class="p-2" name="arrow-right" size="20" color="#c8c8d3" />
 				</view>
-				<view class="w-3/4 h-10 mb-4 rounded bg-[#04041508] flex justify-center items-center">
+				<view
+					class="w-3/4 h-10 mb-4 rounded bg-[#04041508] flex justify-center items-center"
+					@click="toCoupon()"
+				>
 					<uv-icon class="mr-4 p-2" name="coupon-fill" size="24" color="#c8c8d3" />
 					<uv-text size="16" :lines="1" :text="`我的优惠卷`" />
-					<!-- <uv-icon class="p-2" name="arrow-right" size="20" color="#c8c8d3" /> -->
-					<span class="pr-4">{{ 0 }}</span>
+					<span class="pr-1">{{ couponTotal }}</span>
+					<uv-icon class="p-2" name="arrow-right" size="20" color="#c8c8d3" />
 				</view>
 				<!-- <view class="w-3/4 h-10 mb-4 rounded bg-[#04041508] flex justify-center items-center">
 					<uv-icon class="mr-4 p-2" name="shopping-cart-fill" size="24" color="#c8c8d3" />

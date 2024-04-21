@@ -41,6 +41,18 @@
 			"style": {
 				"navigationBarTitleText": "订单详情"
 			}
+		},
+		{
+			"path": "pages/coupon/index",
+			"style": {
+				"navigationBarTitleText": "我的优惠券"
+			}
+		},
+		{
+			"path": "pages/bill/index",
+			"style": {
+				"navigationBarTitleText": "我的账单"
+			}
 		}
 	],
 	"globalStyle": {

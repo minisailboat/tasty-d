@@ -1,14 +1,10 @@
 import type { ApiResult } from '@/types/global'
+import type { Coupon } from '@/types/shop/coupon'
 import request from '@/utils/request'
 
-const basePath = '/user'
 enum Api {
-	Page = `${basePath}/page`,
-	Query = `${basePath}/query`,
-	Common = `${basePath}`,
-	Batch = `${basePath}/batch`,
-	UpdateState = `${basePath}/state`,
-	Existence = `${basePath}/existence`
+	Coupon = `/user/sppUserCoupon`,
+	Wallet = `/user/userWallet`
 }
 
 /**
@@ -17,7 +13,33 @@ enum Api {
  */
 export function receiveCouponApi(couponId: string): Promise<ApiResult<Boolean>> {
 	return request({
-		url: `${Api.Common}/sppUserCoupon/${couponId}`,
+		url: `${Api.Coupon}/${couponId}`,
 		method: 'POST'
+	})
+}
+
+/**
+ * 自己的优惠券列表
+ * @param state：1、待使用、2：已使用、3：已过期
+ * @returns
+ */
+export function queryCouponSelfApi(state?: number): Promise<ApiResult<Coupon[]>> {
+	return request({
+		url: `${Api.Coupon}/querySelf`,
+		method: 'POST',
+		data: {
+			state
+		}
+	})
+}
+
+/**
+ * 自己的余额
+ * @returns
+ */
+export function queryBalanceSelfApi(): Promise<ApiResult<number>> {
+	return request({
+		url: `${Api.Wallet}/queryBalanceSelf`,
+		method: 'GET'
 	})
 }
