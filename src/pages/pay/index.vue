@@ -21,7 +21,12 @@ const balance = toRef(billStore, 'balance')
 
 // 优惠券信息
 const couponStore = useCouponStore()
-const couponData = toRef(couponStore, 'couponData')
+const allCouponData = toRef(couponStore, 'couponData')
+const couponData = computed(() => {
+	return allCouponData.value.filter((item) => {
+		return item.state === 1 && item.number
+	})
+})
 const couponPrice = computed(() => {
 	if (model.couponId && orderData.value) {
 		const coupon = couponData.value.find((item) => item.id === model.couponId)
@@ -109,6 +114,9 @@ onMounted(() => {
 			})
 		}
 	})
+
+	// 加载优券
+	couponStore.loadCoupon()
 })
 
 function toLogin() {
@@ -165,14 +173,12 @@ function toLogin() {
 					</uv-radio>
 				</uv-radio-group>
 			</view>
-			<view>
+			<view v-if="couponData.length > 0">
 				<text>优惠券:</text>
 				<uv-radio-group v-model="model.couponId">
 					<uv-radio
 						:customStyle="{ margin: '8px' }"
-						v-for="(item, index) in couponData.filter((item) => {
-							return item.state === 1 && item.number
-						})"
+						v-for="(item, index) in couponData"
 						:label="`${item.label}(${item.money}元x${item.number})`"
 						:name="item.id"
 						:key="index"
