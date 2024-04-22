@@ -35,8 +35,13 @@ export function orderDetailApi(id: string) {
  * @param param
  * @returns
  */
-export function addOrderApi(param: OrderSaveParam) {
-	return request.post<ApiResult<boolean>>(Api.Common, { data: param })
+export function addOrderApi(param: OrderSaveParam): Promise<ApiResult<boolean>> {
+	// return request.post<ApiResult<boolean>>(Api.Common, { data: param })
+	return request({
+		url: Api.Common,
+		method: 'POST',
+		data: param
+	})
 }
 
 /**

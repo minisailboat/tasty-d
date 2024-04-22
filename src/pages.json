@@ -53,6 +53,12 @@
 			"style": {
 				"navigationBarTitleText": "我的账单"
 			}
+		},
+		{
+			"path": "pages/pay/index",
+			"style": {
+				"navigationBarTitleText": "支付"
+			}
 		}
 	],
 	"globalStyle": {

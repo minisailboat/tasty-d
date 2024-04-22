@@ -31,7 +31,8 @@ const storeSetup = () => {
 			icon: 'none',
 			success: () => {
 				getInfo()
-				uni.reLaunch({ url: '/pages/Layout' })
+				// uni.reLaunch({ url: '/pages/Layout' })
+				uni.navigateBack()
 			}
 		})
 	}

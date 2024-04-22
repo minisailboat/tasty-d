@@ -52,7 +52,6 @@ const bannerData = computed(() => {
 		.filter((item) => item.length > 0)
 		.map((item) => item[0])
 })
-console.log(bannerData.value)
 
 /** 路由跳转 */
 function toStore(store: Store) {

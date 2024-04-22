@@ -86,9 +86,30 @@ function removeFood(food: Food) {
 	}
 }
 
+function toPay() {
+	if (cart.value.length === 0) {
+		uni.showToast({
+			title: '请选择商品',
+			icon: 'none'
+		})
+		return
+	}
+	uni.navigateTo({
+		url: '/pages/pay/index',
+		success: ({ eventChannel }) => {
+			console.log('eventChannel', eventChannel)
+			eventChannel.emit('onPay', {
+				store: storeData.value,
+				cart: cart.value,
+				totalPrice: totalPrice.value
+			})
+		}
+	})
+}
+
 onMounted(() => {
 	// 监听事件
-	const instance = getCurrentInstance()?.proxy
+	const instance: any = getCurrentInstance()?.proxy
 	const eventChannel = instance?.getOpenerEventChannel()
 	eventChannel.on('openStore', (store: Store) => {
 		// 处理事件
@@ -103,17 +124,17 @@ onMounted(() => {
 
 /** 路由跳转 */
 function toFoodDetail(food: Food) {
-	uni.navigateTo({
-		url: '/pages/store/Detail',
-		success({ eventChannel }) {
-			eventChannel.emit('openFood', food)
-		}
-	})
+	// uni.navigateTo({
+	// 	url: '/pages/store/Detail',
+	// 	success({ eventChannel }) {
+	// 		eventChannel.emit('openFood', food)
+	// 	}
+	// })
 }
 </script>
 
 <template>
-	<div class="food h-screen flex flex-col bg-[#65c6b0] relative">
+	<div class="store h-screen flex flex-col bg-[#65c6b0] relative">
 		<NavBar back backIconColor="#fff" class="w-full bg-[#0000002d] text-white z-[999] absolute" />
 		<uv-image v-if="storeData?.cover" :src="storeData?.cover" width="100%" class="absolute" mode="widthFix" />
 		<view class="flex-1 mt-56 p-4 reactive rounded-t-3xl overflow-auto z-[999] bg-white">
@@ -197,7 +218,7 @@ function toFoodDetail(food: Food) {
 						<view class="p-4 h-full font-bold text-[#65c6b0]">
 							{{ totalPrice }}
 						</view>
-						<view class="p-4 h-full text-white bg-[#65c6b0]" @click.stop="() => {}">去结算</view>
+						<view class="p-4 h-full text-white bg-[#65c6b0]" @click.stop="toPay()">去结算</view>
 					</view>
 					<!-- 购物车 -->
 					<uv-popup ref="cartPopupRef" mode="bottom" :round="20">
@@ -220,7 +241,7 @@ function toFoodDetail(food: Food) {
 									:text="'去结算'"
 									type="primary"
 									customStyle="background: #65c6b0; border: none"
-									@click="() => {}"
+									@click="toPay()"
 								/>
 							</view>
 						</view>

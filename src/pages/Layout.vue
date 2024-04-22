@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onLoad } from '@dcloudio/uni-app'
-import { onMounted, ref, toRef } from 'vue'
+import { getCurrentInstance, onMounted, ref, toRef } from 'vue'
 import NavBar from '@/components/NavBar.vue'
 import Tabbar from '@/components/Tabbar.vue'
 import Home from './home/index.vue'
@@ -10,8 +10,6 @@ import My from './my/index.vue'
 import type { TabbarItem } from '@/types/index'
 import { TabbarEnum } from '@/enums'
 import { useUserStore } from '@/stores/user'
-
-onLoad(() => {})
 
 const tabbar = ref<TabbarItem[]>([
 	{
@@ -50,6 +48,16 @@ const toFilter = () => {
 const userStore = useUserStore()
 const isLogin = toRef(userStore, 'isLogin')
 onMounted(() => {
+	// 监听事件
+	const instance: any = getCurrentInstance()?.proxy
+	const eventChannel = instance?.getOpenerEventChannel()
+
+	eventChannel.on('openOrder', () => {
+		console.log('openOrder')
+		const tab = tabbar.value.find((item) => item.key === TabbarEnum.ORDER)
+		tab && (activeTab.value = tab)
+	})
+
 	isLogin.value && userStore.getInfo()
 })
 </script>
