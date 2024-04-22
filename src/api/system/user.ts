@@ -100,10 +100,11 @@ export function batchDeleteUserApi(ids: string[]) {
  * @param param
  * @returns
  */
-export function changeUserPasswordApi(param: ChangePasswordParam) {
-	return request.put<ApiResult<Boolean>>(Api.ChangePwd, {
-		data: param,
-		repeatSubmit: false
+export function changeUserPasswordApi(param: ChangePasswordParam): Promise<ApiResult<Boolean>> {
+	return request({
+		url: Api.ChangePwd,
+		method: 'PUT',
+		data: param
 	})
 }
 

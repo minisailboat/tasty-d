@@ -34,14 +34,19 @@ function toLogout() {
 	})
 	userStore.logout()
 }
+function toCoupon() {
+	uni.navigateTo({
+		url: '/pages/coupon/index'
+	})
+}
 function toBill() {
 	uni.navigateTo({
 		url: '/pages/bill/index'
 	})
 }
-function toCoupon() {
+function toChangePassword() {
 	uni.navigateTo({
-		url: '/pages/coupon/index'
+		url: '/pages/password/index'
 	})
 }
 
@@ -112,7 +117,10 @@ watchEffect(() => {
 					<uv-text size="16" :lines="1" :text="`绑定手机`" />
 					<uv-icon class="p-2" name="arrow-right" size="20" color="#c8c8d3" />
 				</view> -->
-				<view class="w-3/4 h-10 mb-4 rounded bg-[#04041508] flex justify-center items-center">
+				<view
+					class="w-3/4 h-10 mb-4 rounded bg-[#04041508] flex justify-center items-center"
+					@click="toChangePassword()"
+				>
 					<uv-icon class="mr-4 p-2" name="empty-permission" bold size="24" color="#c8c8d3" />
 					<uv-text size="16" :lines="1" :text="`修改密码`" />
 					<uv-icon class="p-2" name="arrow-right" size="20" color="#c8c8d3" />

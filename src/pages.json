@@ -53,6 +53,12 @@
 			"style": {
 				"navigationBarTitleText": "支付"
 			}
+		},
+		{
+			"path": "pages/password/index",
+			"style": {
+				"navigationBarTitleText": "修改密码"
+			}
 		}
 	],
 	"globalStyle": {
