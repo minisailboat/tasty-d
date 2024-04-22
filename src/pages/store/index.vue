@@ -3,9 +3,9 @@ import { queryFoodCategoryApi } from '@/api/shop/category'
 import { queryFoodApi } from '@/api/shop/food'
 import NavBar from '@/components/NavBar.vue'
 import type { Category } from '@/types/shop/category'
-import type { Food } from '@/types/shop/food'
+import type { Food, OrderFoodInfo } from '@/types/shop/food'
 import type { Store } from '@/types/shop/store'
-import { getCurrentInstance, onMounted, ref, watchEffect } from 'vue'
+import { computed, getCurrentInstance, onMounted, ref, watchEffect } from 'vue'
 
 /** 店铺信息 */
 const storeData = ref<Store>()
@@ -40,6 +40,51 @@ watchEffect(() => {
 		loadStoreFood(param)
 	}
 })
+
+/** 购物车 */
+// const cartStore = useCartStore()
+const cart = ref<OrderFoodInfo[]>([])
+const cartPopupRef = ref<any>(null)
+/** 统计总金额 */
+const totalPrice = computed(() => {
+	return cart.value.reduce((total, item: OrderFoodInfo) => {
+		return total + Number(item.price) * item.number
+	}, 0)
+})
+/** 打开购物车弹窗 */
+function openCartPopup() {
+	cartPopupRef.value.open()
+}
+/** 加入购物车 */
+function addFood(food: Food) {
+	let cartFood = cart.value.find((item) => item.foodId === food.id)
+	if (!cartFood) {
+		cartFood = {
+			foodId: String(food.id),
+			storeId: String(food.storeId),
+			cover: food.cover!,
+			label: food.label!,
+			description: food.description!,
+			number: 1,
+			price: food.price!
+		}
+		cart.value.push(cartFood)
+		return
+	}
+	cartFood.number += 1
+}
+/** 移出购物车 */
+function removeFood(food: Food) {
+	const cartFood = cart.value.find((item) => item.foodId === food.id)
+	if (!cartFood) {
+		return
+	}
+	if (cartFood.number === 1) {
+		cart.value = cart.value.filter((item) => item.foodId !== food.id)
+	} else {
+		cartFood.number -= 1
+	}
+}
 
 onMounted(() => {
 	// 监听事件
@@ -127,12 +172,18 @@ function toFoodDetail(food: Food) {
 							</view>
 							<view class="flex text-sm text-gray-400">
 								<uv-text size="14" :lines="2" :text="foodItem.description" />
-								<view class="flex justify-end text-sm text-gray-400 translate-x-3">
-									<uv-icon class="mr-1" name="plus-circle" :size="22" color="#9ca3af" />
-									<view class="w-[50rpx] flex justify-center items-center">
-										<span size="18">9</span>
+								<view class="px-1 flex justify-end text-sm text-gray-400 translate-x-3" @click.stop>
+									<view class="flex" @click.stop="addFood(foodItem)">
+										<uv-icon class="mr-1" name="plus-circle" :size="22" color="#9ca3af" />
 									</view>
-									<uv-icon class="mr-1" name="minus-circle" :size="22" color="#9ca3af" />
+									<view class="w-[50rpx] flex justify-center items-center">
+										<span size="18">{{
+											cart.find((item) => item.foodId === foodItem.id)?.number ?? 0
+										}}</span>
+									</view>
+									<view class="flex" @click.stop="removeFood(foodItem)">
+										<uv-icon class="mr-1" name="minus-circle" :size="22" color="#9ca3af" />
+									</view>
 								</view>
 							</view>
 						</view>
@@ -141,10 +192,39 @@ function toFoodDetail(food: Food) {
 				<view class="w-full absolute left-0 bottom-0">
 					<view
 						class="m-4 h-full shadow-lg rounded-3xl overflow-hidden bg-[#f8f8f8] flex justify-between items-center"
+						@click="openCartPopup()"
 					>
-						<view class="p-4 h-full font-bold text-[#65c6b0]">9.99</view>
-						<view class="p-4 h-full text-white bg-[#65c6b0]">去结算</view>
+						<view class="p-4 h-full font-bold text-[#65c6b0]">
+							{{ totalPrice }}
+						</view>
+						<view class="p-4 h-full text-white bg-[#65c6b0]" @click.stop="() => {}">去结算</view>
 					</view>
+					<!-- 购物车 -->
+					<uv-popup ref="cartPopupRef" mode="bottom" :round="20">
+						<view v-if="cart.length === 0" class="px-4 py-8">
+							<uv-empty mode="data" icon="https://cdn.uviewui.com/uview/empty/car.png" />
+						</view>
+						<view v-else class="flex flex-col">
+							<view class="flex-1 min-h-[200px] max-h-[250px] overflow-auto">
+								<uv-list class="mt-4">
+									<uv-list-item
+										v-for="(cartItem, cartindex) in cart"
+										:key="`${cartItem.foodId}_${cartindex}`"
+										:title="cartItem.label"
+										:rightText="`${cartItem.price}元 x ${cartItem.number}`"
+									/>
+								</uv-list>
+							</view>
+							<view class="p-4">
+								<uv-button
+									:text="'去结算'"
+									type="primary"
+									customStyle="background: #65c6b0; border: none"
+									@click="() => {}"
+								/>
+							</view>
+						</view>
+					</uv-popup>
 				</view>
 			</view>
 		</view>

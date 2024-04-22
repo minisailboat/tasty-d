@@ -25,4 +25,19 @@ export interface FoodUpdateParam {
 	storeId?: number | null
 }
 
+export interface OrderFoodInfo {
+	foodId: string
+	storeId: string
+	cover: string
+	label: string
+	description: string
+	number: number
+	price: string
+}
+
+export interface StoreCart {
+	storeId: string
+	cart: Array<OrderFoodInfo>
+}
+
 export interface FoodSaveParam extends Omit<FoodUpdateParam, 'id'> {}
