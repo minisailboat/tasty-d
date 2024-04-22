@@ -14,6 +14,7 @@ export interface Store {
 	state?: number
 	sortValue?: number
 	deleted?: boolean
+	foods?: any[]
 }
 
 export interface StoreUpdateParam {

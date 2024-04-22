@@ -1,6 +1,7 @@
 import type { Food, FoodSaveParam, FoodUpdateParam } from '@/types/shop/food'
 import type { ApiResult, PageParam, PageResult, UpdateStateParam } from '@/types/global'
 import request from '@/utils/request'
+import type { Store } from '@/types/shop/store'
 
 const basePath = '/shop/shopStoreFood'
 enum Api {
@@ -32,6 +33,20 @@ export function queryFoodApi(param: Food = {}): Promise<ApiResult<Food[]>> {
 		url: Api.Common + '/noToken/query',
 		method: 'POST',
 		data: param
+	})
+}
+
+/**
+ * 查询所有
+ * @returns
+ */
+export function queryWithFoodApi(label: string): Promise<ApiResult<Store[]>> {
+	return request({
+		url: Api.Common + '/noToken/queryWithFood',
+		method: 'POST',
+		data: {
+			label
+		}
 	})
 }
 

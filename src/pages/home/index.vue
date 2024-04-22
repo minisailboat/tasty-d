@@ -94,9 +94,6 @@ onMounted(() => {
 			height="170"
 			@click="(index: number) => toFoodDetail(bannerData[index])"
 		/>
-		<!-- <view class="p-4">
-			<uv-input placeholder="前置图标" prefixIcon="search" prefixIconStyle="font-size: 22px;color: #909399" />
-		</view> -->
 		<!-- 优惠活动 -->
 		<view class="mb-4 flex flex-col">
 			<!-- 优惠标题 -->

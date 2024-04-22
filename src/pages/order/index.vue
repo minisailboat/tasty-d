@@ -124,7 +124,12 @@ onMounted(() => {
 			<view class="mx-4 mb-2">
 				<uv-text bold size="16" :lines="1" :text="`待支付`" />
 			</view> -->
-		<view class="mt-[100rpx] px-4">
+		<view class="mt-[100rpx] flex-1 px-4" :class="orderfilter.length === 0 ? 'flex flex-col justify-center' : ''">
+			<uv-empty
+				v-show="orderfilter.length === 0"
+				mode="data"
+				icon="https://cdn.uviewui.com/uview/empty/car.png"
+			/>
 			<view
 				class="w-full h-[190rpx] mb-2 flex items-center"
 				v-for="(item, index) in orderfilter"

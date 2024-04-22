@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useUserStore } from '@/stores/user'
-import { onMounted, toRef, watchEffect } from 'vue'
+import { toRef, watchEffect } from 'vue'
 import { useCouponStore } from '@/stores/coupon'
 import { useBillStore } from '@/stores/bill'
 

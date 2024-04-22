@@ -70,7 +70,7 @@ onMounted(() => {
 		>
 			<template #left>
 				<view v-if="activeTab.key === TabbarEnum.HOME" class="pr-2 flex items-center">
-					<uv-icon name="scan" :size="28" />
+					<!-- <uv-icon name="scan" :size="28" /> -->
 					<!-- <uv-icon name="map" :size="23" />
 					<uv-text :lines="1" text="当前位置当前位置当前位置当前位置当前位置" /> -->
 				</view>
@@ -80,10 +80,10 @@ onMounted(() => {
 			</template>
 		</NavBar>
 		<view class="content flex-1 overflow-y-auto">
-			<Home v-show="activeTab.key === TabbarEnum.HOME" />
+			<Home v-if="activeTab.key === TabbarEnum.HOME" />
 			<Order v-if="activeTab.key === TabbarEnum.ORDER" />
-			<Cart v-show="activeTab.key === TabbarEnum.CART" />
-			<My v-show="activeTab.key === TabbarEnum.MY" />
+			<Cart v-if="activeTab.key === TabbarEnum.CART" />
+			<My v-if="activeTab.key === TabbarEnum.MY" />
 		</view>
 		<Tabbar :tabbar="tabbar" v-model:active="activeTab" />
 	</view>
