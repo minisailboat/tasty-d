@@ -23,7 +23,8 @@ const show = computed({
 // 表单
 const formRef = ref<any>(null)
 const formData = reactive({
-	account: props.registerData?.account ?? 'superAdmin',
+	// account: props.registerData?.account ?? 'superAdmin',
+	account: props.registerData?.account ?? 'shufen',
 	password: props.registerData?.password ?? '123456',
 	code: '',
 	key: ''
