@@ -27,9 +27,7 @@ function toggleCategory(category?: Category) {
 const storeFoodData = ref<Food[]>([])
 async function loadStoreFood(param: Food) {
 	const { data } = await queryFoodApi(param)
-	if (data && data?.length > 0) {
-		storeFoodData.value = data
-	}
+	storeFoodData.value = data ?? []
 }
 watchEffect(() => {
 	if (storeData.value?.id) {
@@ -37,7 +35,7 @@ watchEffect(() => {
 			storeId: storeData.value.id
 		}
 		if (activeCategory.value) {
-			param['categoryId'] = `${activeCategory.value?.id}`
+			param['categoryIds'] = [`${activeCategory.value?.id}`]
 		}
 		loadStoreFood(param)
 	}
@@ -107,31 +105,34 @@ function toFoodDetail(food: Food) {
 				</view>
 				<view class="flex flex-col pb-[170rpx]">
 					<uv-text size="18" :lines="1" bold :customStyle="{ margin: '10rpx 0' }" :text="`菜单`" />
-					<view class="">
-						<view
-							class="w-full h-[190rpx] mb-2 flex items-center"
-							v-for="(foodItem, foodIndex) in storeFoodData"
-							:key="foodIndex"
-							@click="() => toFoodDetail(foodItem)"
-						>
-							<uv-image class="mr-2" width="180rpx" height="180rpx" radius="12" :src="foodItem.cover" />
-							<view class="w-full h-full p-3 rounded-xl bg-white box-border flex flex-col">
-								<view class="mb-3 flex justify-between">
-									<uv-text bold size="16" :lines="1" :text="foodItem.label" />
-									<view class="flex justify-end text-sm text-gray-400">
-										<uv-icon class="mr-1" name="red-packet" :size="16" color="#9ca3af" />
-										<uv-text size="18" :lines="1" :text="foodItem.price" />
-									</view>
+					<uv-empty
+						v-show="storeFoodData.length === 0"
+						mode="data"
+						icon="https://cdn.uviewui.com/uview/empty/car.png"
+					/>
+					<view
+						class="w-full h-[190rpx] mb-2 flex items-center"
+						v-for="(foodItem, foodIndex) in storeFoodData"
+						:key="foodIndex"
+						@click="() => toFoodDetail(foodItem)"
+					>
+						<uv-image class="mr-2" width="180rpx" height="180rpx" radius="12" :src="foodItem.cover" />
+						<view class="w-full h-full p-3 rounded-xl bg-white box-border flex flex-col">
+							<view class="mb-3 flex justify-between">
+								<uv-text bold size="16" :lines="1" :text="foodItem.label" />
+								<view class="flex justify-end text-sm text-gray-400">
+									<uv-icon class="mr-1" name="red-packet" :size="16" color="#9ca3af" />
+									<uv-text size="18" :lines="1" :text="foodItem.price" />
 								</view>
-								<view class="flex text-sm text-gray-400">
-									<uv-text size="14" :lines="2" :text="foodItem.description" />
-									<view class="flex justify-end text-sm text-gray-400 translate-x-3">
-										<uv-icon class="mr-1" name="plus-circle" :size="22" color="#9ca3af" />
-										<view class="w-[50rpx] flex justify-center items-center">
-											<span size="18">9</span>
-										</view>
-										<uv-icon class="mr-1" name="minus-circle" :size="22" color="#9ca3af" />
+							</view>
+							<view class="flex text-sm text-gray-400">
+								<uv-text size="14" :lines="2" :text="foodItem.description" />
+								<view class="flex justify-end text-sm text-gray-400 translate-x-3">
+									<uv-icon class="mr-1" name="plus-circle" :size="22" color="#9ca3af" />
+									<view class="w-[50rpx] flex justify-center items-center">
+										<span size="18">9</span>
 									</view>
+									<uv-icon class="mr-1" name="minus-circle" :size="22" color="#9ca3af" />
 								</view>
 							</view>
 						</view>

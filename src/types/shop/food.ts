@@ -9,7 +9,7 @@ export interface Food {
 	sortValue?: number
 	state?: number
 	storeId?: string | number
-	categoryId?: string | number
+	categoryIds?: (string | number)[]
 	updateTime?: string
 	updatedBy?: number
 }
