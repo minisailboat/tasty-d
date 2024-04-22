@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { addOrderApi } from '@/api/shop/order'
+import { addOrderApi, orderPayApi } from '@/api/shop/order'
 import NavBar from '@/components/NavBar.vue'
 import { useBillStore } from '@/stores/bill'
 import { useCouponStore } from '@/stores/coupon'
 import { useUserStore } from '@/stores/user'
 import type { OrderInfo } from '@/types/pay'
-import type { OrderSaveParam } from '@/types/shop/order'
+import { OrderStateEnum, type OrderSaveParam } from '@/types/shop/order'
 import { computed, getCurrentInstance, onMounted, reactive, ref, toRef, watchEffect } from 'vue'
 
 // 用户状态
@@ -14,6 +14,12 @@ const isLogin = toRef(userStore, 'isLogin')
 
 // 订单信息
 const orderData = ref<OrderInfo>()
+const hasOrder = computed(() => {
+	return orderData.value !== undefined && orderData.value.id !== null
+})
+const canPay = computed(() => {
+	return orderData.value !== undefined && orderData.value.state === OrderStateEnum.WAIT_PAY
+})
 
 // 账单信息
 const billStore = useBillStore()
@@ -70,8 +76,8 @@ async function placeOrder() {
 		})
 		return
 	}
-	const { success, message } = await addOrderApi(model)
-	console.log(success, message)
+	const { success, message, data } = await addOrderApi(model)
+	console.log('下单', success, message, data)
 	if (!success) {
 		uni.showToast({
 			title: message,
@@ -79,8 +85,36 @@ async function placeOrder() {
 		})
 		return
 	}
+	orderData.value = {
+		id: data?.id ?? null,
+		state: data?.state ?? null,
+		store: data?.store!,
+		cart: data?.foods ?? [],
+		totalPrice: data?.totalPrice!
+	}
 	uni.showToast({
 		title: '下单成功',
+		icon: 'none'
+	})
+}
+
+// 支付
+async function pay() {
+	if (!orderData.value) {
+		uni.showToast({
+			title: '请先下单',
+			icon: 'none'
+		})
+		return
+	}
+	uni.showLoading({
+		title: '支付中...',
+		mask: true
+	})
+	await orderPayApi(orderData.value?.id!)
+	uni.hideLoading()
+	uni.showToast({
+		title: '支付成功',
 		icon: 'none'
 	})
 	uni.navigateTo({
@@ -94,6 +128,14 @@ async function placeOrder() {
 	})
 }
 
+const navTitle = computed(() => {
+	if (hasOrder.value) {
+		return canPay ? '订单支付' : '订单详情'
+	} else {
+		return '下订单'
+	}
+})
+
 // 初始化
 onMounted(() => {
 	// 监听事件
@@ -104,8 +146,10 @@ onMounted(() => {
 		// 处理事件
 		orderData.value = data
 
+		console.log(data)
+
 		// 添加菜品信息
-		for (const item of data.cart) {
+		for (const item of data.cart ?? []) {
 			model.foods.push({
 				label: item.label,
 				foodId: item.foodId,
@@ -119,6 +163,7 @@ onMounted(() => {
 	couponStore.loadCoupon()
 })
 
+/** 路由跳转 */
 function toLogin() {
 	uni.navigateTo({
 		url: '/pages/auth/index'
@@ -128,7 +173,7 @@ function toLogin() {
 
 <template>
 	<view class="h-screen flex flex-col">
-		<NavBar title="支付" back />
+		<NavBar :title="navTitle" back />
 		<view v-if="!isLogin" class="flex-1 flex flex-col justify-center items-center">
 			<uv-empty mode="permission" :text="'请先登录'" />
 			<uv-button class="mt-4" type="primary" @click="toLogin()"> 登录 </uv-button>
@@ -188,23 +233,29 @@ function toLogin() {
 				</uv-radio-group>
 			</view>
 			<view>
-				<text>备注:</text>
-				<uv-textarea v-model="model.remark" placeholder="请输入内容"></uv-textarea>
+				<view class="mb-2">
+					<text>备注:</text>
+				</view>
+				<uv-textarea v-model="model.remark" :disabled="hasOrder" placeholder="请输入内容"></uv-textarea>
 			</view>
 		</view>
 		<view class="w-full absolute left-0 bottom-0">
 			<view
-				class="m-4 h-full shadow-lg rounded-3xl overflow-hidden bg-[#f8f8f8] flex justify-between items-center"
+				class="m-4 min-h-[106rpx] shadow-lg rounded-3xl overflow-hidden bg-[#f8f8f8] flex items-center"
+				:class="hasOrder && !canPay ? 'justify-end' : 'justify-between'"
 			>
 				<view class="px-4 h-full font-bold">
-					<text class="mr-4 text-3xl text-[#65c6b0]">
+					<text class="text-3xl mr-3 text-[#65c6b0]">
 						{{ couponPrice }}
 					</text>
-					<text v-show="model.couponId" class="text-gray-400 line-through decoration-[#c66565]">
+					<text v-if="model.couponId" class="text-gray-400 line-through decoration-[#c66565]">
 						{{ orderData?.totalPrice }}
 					</text>
 				</view>
-				<view class="p-4 h-full text-white bg-[#65c6b0]" @click.stop="placeOrder()">立即下单</view>
+				<view v-if="!hasOrder" class="p-4 h-full text-white bg-[#65c6b0]" @click.stop="placeOrder()">
+					立即下单
+				</view>
+				<view v-else-if="canPay" class="p-4 h-full text-white bg-[#65c6b0]" @click.stop="pay()">立即支付</view>
 			</view>
 		</view>
 	</view>

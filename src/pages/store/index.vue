@@ -86,27 +86,6 @@ function removeFood(food: Food) {
 	}
 }
 
-function toPay() {
-	if (cart.value.length === 0) {
-		uni.showToast({
-			title: '请选择商品',
-			icon: 'none'
-		})
-		return
-	}
-	uni.navigateTo({
-		url: '/pages/pay/index',
-		success: ({ eventChannel }) => {
-			console.log('eventChannel', eventChannel)
-			eventChannel.emit('onPay', {
-				store: storeData.value,
-				cart: cart.value,
-				totalPrice: totalPrice.value
-			})
-		}
-	})
-}
-
 onMounted(() => {
 	// 监听事件
 	const instance: any = getCurrentInstance()?.proxy
@@ -124,12 +103,34 @@ onMounted(() => {
 
 /** 路由跳转 */
 function toFoodDetail(food: Food) {
-	// uni.navigateTo({
-	// 	url: '/pages/store/Detail',
-	// 	success({ eventChannel }) {
-	// 		eventChannel.emit('openFood', food)
-	// 	}
-	// })
+	uni.navigateTo({
+		url: '/pages/store/Detail',
+		success({ eventChannel }) {
+			eventChannel.emit('openFood', food)
+		}
+	})
+}
+function toPay() {
+	if (cart.value.length === 0) {
+		uni.showToast({
+			title: '请选择商品',
+			icon: 'none'
+		})
+		return
+	}
+	uni.navigateTo({
+		url: '/pages/pay/index',
+		success: ({ eventChannel }) => {
+			console.log('eventChannel', eventChannel)
+			eventChannel.emit('onPay', {
+				id: null,
+				state: null,
+				store: storeData.value,
+				cart: cart.value,
+				totalPrice: totalPrice.value
+			})
+		}
+	})
 }
 </script>
 

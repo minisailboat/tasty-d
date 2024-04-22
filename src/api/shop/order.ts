@@ -1,6 +1,7 @@
-import type { OrderSaveParam, OrderUpdateParam } from '@/types/shop/order'
+import type { OrderDetailInfo, OrderSaveParam, OrderUpdateParam } from '@/types/shop/order'
 import type { ApiResult, PageParam, PageResult, UpdateStateParam } from '@/types/global'
 import request from '@/utils/request'
+import type { OrderInfo } from '@/types/pay'
 
 const basePath = '/shop/shopOrder'
 enum Api {
@@ -26,8 +27,24 @@ export function pageOrderApi(param: PageParam<any>) {
  * 查询订单详情
  * @returns
  */
-export function orderDetailApi(id: string) {
-	return request.get<ApiResult<any>>(`${Api.Common}/detail/${id}`)
+export function orderDetailByIdApi(id: string) {
+	return request.get<ApiResult<OrderDetailInfo>>(`${Api.Common}/detail/${id}`)
+}
+
+/**
+ * 查询所有订单详情
+ * @returns
+ */
+export function orderDetailApi() {
+	return request.get<OrderDetailInfo[]>(`${Api.Common}/detail`)
+}
+
+/**
+ * 支付订单
+ * @returns
+ */
+export function orderPayApi(orderId: string) {
+	return request.put<ApiResult<Boolean>>(`${Api.Common}/pay/${orderId}`)
 }
 
 /**
@@ -35,8 +52,7 @@ export function orderDetailApi(id: string) {
  * @param param
  * @returns
  */
-export function addOrderApi(param: OrderSaveParam): Promise<ApiResult<boolean>> {
-	// return request.post<ApiResult<boolean>>(Api.Common, { data: param })
+export function addOrderApi(param: OrderSaveParam): Promise<ApiResult<OrderInfo>> {
 	return request({
 		url: Api.Common,
 		method: 'POST',

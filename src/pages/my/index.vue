@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useUserStore } from '@/stores/user'
-import { onMounted, toRef } from 'vue'
+import { onMounted, toRef, watchEffect } from 'vue'
 import { useCouponStore } from '@/stores/coupon'
 import { useBillStore } from '@/stores/bill'
 
@@ -46,7 +46,7 @@ function toCoupon() {
 }
 
 // 初始化
-onMounted(() => {
+watchEffect(() => {
 	if (isLogin.value) {
 		billStore.loadBalance()
 		couponStore.loadCoupon()

@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { onLoad } from '@dcloudio/uni-app'
 import { getCurrentInstance, onMounted, ref, toRef } from 'vue'
 import NavBar from '@/components/NavBar.vue'
 import Tabbar from '@/components/Tabbar.vue'
@@ -67,7 +66,7 @@ onMounted(() => {
 		<NavBar
 			v-show="![TabbarEnum.MY].includes(activeTab.key)"
 			:title="[TabbarEnum.ORDER, TabbarEnum.CART].includes(activeTab.key) ? activeTab.title : ''"
-			:class="activeTab.key === TabbarEnum.HOME ? '' : ''"
+			:class="activeTab.key === TabbarEnum.ORDER ? 'bg-white' : ''"
 		>
 			<template #left>
 				<view v-if="activeTab.key === TabbarEnum.HOME" class="pr-2 flex items-center">
