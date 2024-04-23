@@ -220,7 +220,7 @@ function toLogin() {
 			</view>
 			<view v-if="couponData.length > 0">
 				<text>优惠券:</text>
-				<uv-radio-group v-model="model.couponId">
+				<uv-radio-group v-model="model.couponId" :disabled="!canPay">
 					<uv-radio
 						:customStyle="{ margin: '8px' }"
 						v-for="(item, index) in couponData"
@@ -239,7 +239,7 @@ function toLogin() {
 				<uv-textarea v-model="model.remark" :disabled="hasOrder" placeholder="请输入内容"></uv-textarea>
 			</view>
 		</view>
-		<view class="w-full absolute left-0 bottom-0">
+		<view v-if="isLogin" class="w-full absolute left-0 bottom-0">
 			<view
 				class="m-4 min-h-[106rpx] shadow-lg rounded-3xl overflow-hidden bg-[#f8f8f8] flex items-center"
 				:class="hasOrder && !canPay ? 'justify-end' : 'justify-between'"
