@@ -59,6 +59,12 @@
 			"style": {
 				"navigationBarTitleText": "修改密码"
 			}
+		},
+		{
+			"path": "pages/userInfo/index",
+			"style": {
+				"navigationBarTitleText": "用户信息"
+			}
 		}
 	],
 	"globalStyle": {

@@ -73,8 +73,13 @@ export function userRegisterApi(data: any): Promise<ApiResult<boolean>> {
  * @param param
  * @returns
  */
-export function updateUserApi(param: SysUserUpdateParam) {
-	return request.put<ApiResult<boolean>>(Api.Common, { data: param })
+export function updateUserApi(param: SysUserUpdateParam): Promise<ApiResult<boolean>> {
+	// return request.put<ApiResult<boolean>>(Api.Common, { data: param })
+	return request({
+		url: `${Api.Common}`,
+		method: 'PUT',
+		data: param
+	})
 }
 
 /**

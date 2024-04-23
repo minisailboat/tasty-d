@@ -73,7 +73,7 @@ export interface SysUserUpdateParam {
 	/** 性别 0未知 1男 2女 */
 	sex: number
 	/** 生日 */
-	birthday?: string
+	birthday?: string | null
 	/** 角色id列表 */
 	roleIds?: string[]
 }

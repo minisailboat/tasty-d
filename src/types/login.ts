@@ -41,7 +41,7 @@ export interface CaptchaResult {
  */
 export interface LoginUserInfo {
 	/** 用户id */
-	id: number | string
+	id: string
 	/** 账号 */
 	account: string
 	/** 用户名 */
@@ -52,6 +52,10 @@ export interface LoginUserInfo {
 	sex: number
 	/** 状态 0正常 1封禁 */
 	state: number
+	/** 用户权限列表 */
+	permissions: []
+	/** 角色id列表 */
+	roles: string[]
 }
 
 /**

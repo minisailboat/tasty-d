@@ -49,6 +49,11 @@ function toChangePassword() {
 		url: '/pages/password/index'
 	})
 }
+function toUserInfo() {
+	// uni.navigateTo({
+	// 	url: '/pages/userInfo/index'
+	// })
+}
 
 // 初始化
 watchEffect(() => {
@@ -72,6 +77,7 @@ watchEffect(() => {
 				<view
 					v-if="isLogin"
 					class="bg-white rounded-xl absolute bottom-0 right-0 translate-x-1/3 translate-y-1/3"
+					@click="toUserInfo()"
 				>
 					<uv-icon class="p-2" name="edit-pen-fill" size="20" />
 				</view>
@@ -107,16 +113,6 @@ watchEffect(() => {
 					<span class="pr-1">{{ couponTotal }}</span>
 					<uv-icon class="p-2" name="arrow-right" size="20" color="#c8c8d3" />
 				</view>
-				<!-- <view class="w-3/4 h-10 mb-4 rounded bg-[#04041508] flex justify-center items-center">
-					<uv-icon class="mr-4 p-2" name="shopping-cart-fill" size="24" color="#c8c8d3" />
-					<uv-text size="16" :lines="1" :text="`我的订单`" />
-					<uv-icon class="p-2" name="arrow-right" size="20" color="#c8c8d3" />
-				</view> -->
-				<!-- <view class="w-3/4 h-10 mb-4 rounded bg-[#04041508] flex justify-center items-center">
-					<uv-icon class="mr-4 p-2" name="phone-fill" size="24" color="#c8c8d3" />
-					<uv-text size="16" :lines="1" :text="`绑定手机`" />
-					<uv-icon class="p-2" name="arrow-right" size="20" color="#c8c8d3" />
-				</view> -->
 				<view
 					class="w-3/4 h-10 mb-4 rounded bg-[#04041508] flex justify-center items-center"
 					@click="toChangePassword()"
